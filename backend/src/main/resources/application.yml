@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: roadfm-backend
+  # 비밀값은 루트 .env(커밋 금지) 또는 환경변수에서만 읽는다. 기본값을 두지 않는다.
+  config:
+    import: optional:file:../.env[.properties]
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

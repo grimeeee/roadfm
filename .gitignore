@@ -1,0 +1,49 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/
+
+# Gradle / build
+.gradle/
+.kotlin/
+build/
+out/
+captures/
+local.properties
+
+# VS Code Java / Eclipse 컴파일 산출물
+bin/
+.classpath
+.project
+.settings/
+.factorypath
+
+# Node / mobile
+node_modules/
+dist/
+apps/mobile/android/app/build/
+apps/mobile/ios/App/Pods/
+
+# 서명 키
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+keystore.properties
+google-services.json
+GoogleService-Info.plist
+
+# 비밀값
+.env
+.env.*
+!.env.example
+application-secret.yml
+application-local.yml
+
+# DB 덤프 / 로그
+*.dump
+*.sql.gz
+*.log

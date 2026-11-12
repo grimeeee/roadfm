@@ -43,6 +43,16 @@ GoogleService-Info.plist
 application-secret.yml
 application-local.yml
 
+# 수집 스크립트 API 응답 캐시
+tools/collect_places/.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# 프로토타입 배포용 압축본(폴더 원본이 기준)
+prototypes/*.zip
+
 # DB 덤프 / 로그
 *.dump
 *.sql.gz

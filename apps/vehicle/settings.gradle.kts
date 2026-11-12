@@ -10,7 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        // TODO: Pleos Connect SDK 저장소 — Playground 프로젝트 승인 후 공식 문서 안내대로 추가
+        // Pleos Connect SDK 저장소 (NaviHelper SDK 가져오기 문서 기준)
+        maven { url = uri("https://nexus-playground.pleos.ai/repository/maven-releases/") }
     }
 }
 rootProject.name = "ROADFM"

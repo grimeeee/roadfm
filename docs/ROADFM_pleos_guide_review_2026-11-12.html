@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pleos 가이드 점검</title>
+<style>
+:root{
+  --bg:#f7f8f6; --surface:#ffffff; --surface-2:#f0f2ef; --text:#1c211e; --muted:#5d665f; --border:#dde2dd;
+  --accent:#1f6b4f; --red:#b42318; --red-bg:#fdecea; --orange:#a85a00; --orange-bg:#fff3e0; --yellow:#7a6400; --yellow-bg:#fbf6d9;
+  --blue:#1d5fa8; --blue-bg:#e8f1fb; --code-bg:#f2f4f1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121614; --surface:#1a1f1c; --surface-2:#222824; --text:#e6ebe7; --muted:#9aa49d; --border:#2e3631;
+    --accent:#6cc79f; --red:#ff8a80; --red-bg:#3a1c1a; --orange:#ffb85c; --orange-bg:#3a2a14; --yellow:#e8d36a; --yellow-bg:#332f15;
+    --blue:#8cbcf0; --blue-bg:#18283a; --code-bg:#161b18;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --surface:#1a1f1c; --surface-2:#222824; --text:#e6ebe7; --muted:#9aa49d; --border:#2e3631;
+  --accent:#6cc79f; --red:#ff8a80; --red-bg:#3a1c1a; --orange:#ffb85c; --orange-bg:#3a2a14; --yellow:#e8d36a; --yellow-bg:#332f15;
+  --blue:#8cbcf0; --blue-bg:#18283a; --code-bg:#161b18;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 16px 80px}
+header h1{font-size:26px;line-height:1.3;margin:0 0 6px}
+header p{margin:0;color:var(--muted)}
+.meta{font-size:13px;color:var(--muted);margin-top:10px}
+h2{font-size:20px;margin:48px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+h3{font-size:17px;margin:0 0 4px;line-height:1.4}
+h4{font-size:14px;margin:16px 0 6px;color:var(--muted);letter-spacing:.02em}
+a{color:var(--accent)}
+code{font-family:"JetBrains Mono",Consolas,monospace;font-size:.88em;background:var(--code-bg);border:1px solid var(--border);border-radius:4px;padding:0 4px;word-break:break-word}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;font-size:13px;line-height:1.55;margin:10px 0}
+pre code{background:none;border:0;padding:0;font-size:inherit}
+ul,ol{padding-left:22px;margin:6px 0}
+li{margin:3px 0}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.stat b{display:block;font-size:28px;line-height:1.1}
+.stat span{color:var(--muted);font-size:13px}
+.stat.red b{color:var(--red)} .stat.orange b{color:var(--orange)} .stat.yellow b{color:var(--yellow)} .stat.blue b{color:var(--blue)}
+.callout{background:var(--blue-bg);border-left:4px solid var(--blue);border-radius:6px;padding:12px 16px;margin:16px 0}
+.callout.warn{background:var(--orange-bg);border-color:var(--orange)}
+nav.toc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-top:24px}
+nav.toc ol{columns:2;column-gap:28px;margin:0}
+@media (max-width:640px){nav.toc ol{columns:1}}
+.issue{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin:14px 0}
+.issue-head{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.b-red{background:var(--red-bg);color:var(--red)} .b-orange{background:var(--orange-bg);color:var(--orange)} .b-yellow{background:var(--yellow-bg);color:var(--yellow)}
+.b-src{background:var(--surface-2);color:var(--muted);font-weight:500}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.fix{background:var(--surface-2);border-radius:8px;padding:10px 14px;margin-top:12px}
+.fix h4{color:var(--accent);margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+.tbl{overflow-x:auto}
+th,td{border:1px solid var(--border);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--surface-2);font-weight:600}
+td.ok{color:var(--accent);font-weight:600} td.no{color:var(--red);font-weight:600}
+.check li{list-style:none;margin-left:-20px}
+.check li::before{content:"☐ ";color:var(--muted)}
+.verify{font-size:12px;color:var(--orange);font-weight:600}
+footer{margin-top:56px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>ROADFM × Pleos 차량 앱 가이드 점검 보고서</h1>
+  <p>Music/Audio 앱 가이드, 주행 규제 관련 가이드, 오디오 포커스 가이드를 현재 기획서·프로토타입·코드와 대조하고 이슈별 해결방안을 정리했습니다.</p>
+  <div class="meta">작성일 2026-11-12 · 기준 문서 <code>docs/ROADFM_master_2026-11-04.md</code> · 대상 <code>apps/vehicle</code>, <code>prototypes/prototype2</code>, <code>docs/ROADFM_prototype2_API_mapping.md</code></div>
+</header>
+
+<div class="summary">
+  <div class="stat red"><b>5</b><span>심사 반려·배포 제외 위험</span></div>
+  <div class="stat orange"><b>4</b><span>아키텍처 결정 필요</span></div>
+  <div class="stat yellow"><b>4</b><span>구현 시 준수 규칙</span></div>
+  <div class="stat blue"><b>9</b><span>Pleos 문의 필요 항목</span></div>
+</div>
+
+<div class="callout">
+  <b>한 줄 결론</b> — <b>주행 중 재생은 Media3 <code>MediaLibraryService</code> + 미디어 센터(시스템 미디어 UI)에 맡기고</b>, ROADFM 자체 화면(경로 발견·장소 상세·여정·퀴즈·설정)은 DO 미선언 상태로 두어 <b>주차(P) 중에만</b> 쓰게 하는 구조가 가이드 요건을 가장 적은 비용으로 충족합니다. 동시에 "자동 재생"을 "사용자가 시작한 세션 안의 이어서 듣기"로 재정의하고, 앱을 <b>오디오 중심 앱</b>으로 포지셔닝해야 합니다.
+</div>
+
+<nav class="toc">
+  <b>목차</b>
+  <ol>
+    <li><a href="#overview">권장 목표 구조</a></li>
+    <li><a href="#red">🔴 심사·배포 차단 위험 (P1~P5)</a></li>
+    <li><a href="#orange">🟠 아키텍처 결정 (P6~P9)</a></li>
+    <li><a href="#yellow">🟡 구현 준수 규칙 (P10~P13)</a></li>
+    <li><a href="#restrict">주행 중 기능 허용 매트릭스</a></li>
+    <li><a href="#skeleton">코드·매니페스트 골격</a></li>
+    <li><a href="#docs">기획 문서 수정 목록</a></li>
+    <li><a href="#ask">Pleos 문의 목록</a></li>
+    <li><a href="#plan">실행 순서</a></li>
+    <li><a href="#refs">참조 문서</a></li>
+  </ol>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<h2 id="overview">1. 권장 목표 구조</h2>
+<div class="tbl"><table>
+<tr><th>구성요소</th><th>역할</th><th>주행(Drive)</th><th>주차(Parking)</th></tr>
+<tr><td><code>RoadFmPlaybackService</code><br>(Media3 <code>MediaLibraryService</code>)</td><td>이야기 재생, 브라우즈 트리, 검색, 스티어링 키·Gleo 음성 대응</td><td class="ok">동작</td><td class="ok">동작</td></tr>
+<tr><td>미디어 센터 / 시스템 미디어 UI</td><td>주행 중 재생 화면(제목·지역·진행·컨트롤), Tune Knob·Media 버튼</td><td class="ok">표시</td><td class="ok">표시</td></tr>
+<tr><td><code>MainActivity</code> (Compose, DO 미선언)</td><td>목적지 요약, 경로 발견, 장소 상세, 나의 여정, 퀴즈, 설정·동의</td><td class="no">시스템 차단</td><td class="ok">사용</td></tr>
+<tr><td>백엔드 <code>/audio/stories</code></td><td>고정 <code>storyId</code>, 지역·주제·경로별 목록, 검색</td><td colspan="2">서비스가 호출</td></tr>
+</table></div>
+<p>이 구조의 장점은 DO 대응 코드(<code>CarUxRestrictions</code> 분기)가 거의 필요 없고, 스티어링 휠 키·Tune Knob·미디어 앱 라이브러리 노출 요건을 미디어 센터가 함께 해결한다는 점입니다. 자체 NOW PLAYING 화면을 주행 중에도 꼭 보여주려면 그 Activity 하나만 DO로 선언하는 선택지를 남겨 둡니다(P4).</p>
+
+<!-- ============ RED ============ -->
+<h2 id="red">2. 🔴 심사·배포 차단 위험</h2>
+
+<div class="issue" id="p1">
+  <div class="issue-head"><span class="badge b-red">P1 · 반려</span><h3>자동 재생 금지 규정과 기획·프로토타입이 충돌</h3><span class="badge b-src">Music/Audio 가이드 §개발 정책</span></div>
+  <div class="cols">
+    <div><h4>가이드 요건</h4><ul>
+      <li>프로필 변경·연결 시 자동 재생 금지</li>
+      <li>재생은 <b>사용자의 명시적 동작</b> 또는 <b>시스템 재개 요청</b>으로만</li>
+    </ul></div>
+    <div><h4>현재 상태</h4><ul>
+      <li><code>ROADFM_deepgreen.html:90</code> "오디오 가이드 자동 재생" 토글 <b>기본 ON</b>, 문구 "새로운 지역의 이야기가 준비되면 재생"</li>
+      <li>API 매핑 16행 "출발하기 → 오디오 자동 재생", 21행 <code>autoAudio</code></li>
+      <li>기획서 시나리오 6 "이동 중 위치에 맞는 오디오가 재생된다"</li>
+    </ul></div>
+  </div>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li><b>재생 상태 머신을 명시</b>: <code>IDLE</code> / <code>PLAYING</code> / <code>PAUSED_BY_USER</code> / <code>PAUSED_BY_FOCUS</code>. 위치 트리거는 <code>PLAYING</code>일 때만 <b>큐 뒤에 추가</b>하고, <code>IDLE</code>·<code>PAUSED_BY_USER</code>에서는 어떤 경우에도 재생을 시작하지 않습니다.</li>
+    <li>토글을 <b>"이어서 듣기 — 다음 지역 이야기를 재생 목록에 자동 추가"</b>로 이름 변경, <b>기본값 OFF</b>. 필드명은 <code>autoAudio</code> → <code>continuousQueue</code>.</li>
+    <li>"출발하기" 버튼은 <b>재생을 시작하지 않고</b> "이야기 듣기" 버튼을 따로 둡니다(또는 버튼명을 "출발하고 이야기 듣기"로 해서 명시적 동작임을 분명히).</li>
+    <li>시동·프로필 변경 시에는 마지막 항목을 <b>준비(prepare)만</b> 하고 재생하지 않습니다. 재개는 Media3 <code>onPlaybackResumption()</code>으로 오는 시스템 요청에서만 합니다.</li>
+    <li>기획서 시나리오 6을 "사용자가 시작한 재생 세션 동안, 다음 지역 이야기가 목록에 이어진다"로 수정합니다.</li>
+  </ol><span class="verify">Pleos 확인: 사용자 세션 중 위치 기반 큐 추가가 '자동 재생'에 해당하지 않는지</span></div>
+</div>
+
+<div class="issue" id="p2">
+  <div class="issue-head"><span class="badge b-red">P2 · 반려</span><h3>카테고리 적합성·하위 카테고리 미정의</h3><span class="badge b-src">Music/Audio 가이드 §카테고리 · 앱 카테고리 가이드</span></div>
+  <div class="cols">
+    <div><h4>가이드 요건</h4><ul>
+      <li>오디오 재생이 <b>핵심 기능</b>이어야 함. 보조 기능이면 "즉시 반려"</li>
+      <li>하위 카테고리(Music/Podcast/Audiobook/Radio) 필수. 미정의 시 반려</li>
+      <li>모든 콘텐츠 단일 리스트 혼합 노출 제한</li>
+      <li>매니페스트 <code>appCategory</code>(game/audio/video)와 마켓 서비스 카테고리는 <b>별개</b></li>
+    </ul></div>
+    <div><h4>현재 상태</h4><ul>
+      <li>경로 추천(F-03), 방문 기록(F-04), 퀴즈·스탬프(F-05), 경유지 추가(F-01) 등 비오디오 기능 비중이 큼</li>
+      <li>경유지 설정·위치 기반 정보는 <b>Mobility Services</b>, 지도는 <b>Maps/Navigation</b>의 허용 예시에 해당</li>
+      <li>"FM"을 내세우지만 실제 콘텐츠는 사전 생성 TTS 에피소드</li>
+    </ul></div>
+  </div>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li>마켓 카테고리 <b>Music/Audio</b>, 매니페스트 <code>android:appCategory="audio"</code>로 정합니다. 소개 문구를 "위치 기반 오디오 여행 채널"로, 핵심 가치를 <b>듣는 경험</b>으로 서술하고, F-03·F-04·F-05는 "청취 경험을 보조하는 주차 중 기능"으로 표현합니다.</li>
+    <li>하위 카테고리는 <b>Podcast 권장</b>(지역·주제별 에피소드 구조와 일치). Radio로 가려면 연속 편성 채널 개념이 있어야 설득력이 있습니다.</li>
+    <li>브라우즈 트리를 나눕니다: <code>루트 → [이 경로의 이야기] [지역별] [주제별(자연·미식·역사)] [최근 들은 이야기]</code>.</li>
+    <li>경로 지도는 앱에서 빼거나 주차 중 화면에만 둡니다(P9).</li>
+  </ol><span class="verify">Pleos 확인: 비오디오 기능 비중이 이 정도일 때 Music/Audio 심사 통과 가능한지, 카테고리 복수 지정 가능 여부</span></div>
+</div>
+
+<div class="issue" id="p3">
+  <div class="issue-head"><span class="badge b-red">P3 · 배포 제외</span><h3>MediaBrowserService/MediaLibraryService 미구현, 매니페스트 누락</h3><span class="badge b-src">Music/Audio 가이드 §필수 구현</span></div>
+  <div class="cols">
+    <div><h4>가이드 요건</h4><ul>
+      <li>MBS 미구현 시 차량 탑재·배포 대상에서 제외 가능</li>
+      <li><code>MediaSession</code>으로 재생 상태·제어 제공</li>
+      <li><code>android:appCategory="audio"</code>, <code>androidx.car.app.launchable=true</code> meta-data</li>
+    </ul></div>
+    <div><h4>현재 상태</h4><ul>
+      <li><code>apps/vehicle</code>에는 <code>MainActivity</code> 하나뿐</li>
+      <li><code>app/build.gradle.kts</code>에 Media3 의존성 없음</li>
+      <li><code>AndroidManifest.xml</code>에 서비스·FGS 권한·카테고리 선언 없음 (targetSdk 35라 FGS 타입 필수)</li>
+    </ul></div>
+  </div>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li><code>androidx.media3:media3-session</code>, <code>media3-exoplayer</code> 추가.</li>
+    <li><code>com.roadfm.car.playback.RoadFmPlaybackService : MediaLibraryService</code> 생성. Media3는 레거시 <code>MediaBrowserService</code> 인터페이스도 함께 노출하므로 두 액션을 모두 intent-filter에 등록합니다.</li>
+    <li>매니페스트에 <code>FOREGROUND_SERVICE</code>, <code>FOREGROUND_SERVICE_MEDIA_PLAYBACK</code>, <code>POST_NOTIFICATIONS</code>, <code>foregroundServiceType="mediaPlayback"</code>, <code>appCategory</code>, launchable meta-data 추가. 골격은 <a href="#skeleton">6장</a>.</li>
+  </ol><span class="verify">Pleos 확인: MediaSessionCompat 기준 요건을 Media3 레거시 호환 계층으로 충족하는지</span></div>
+</div>
+
+<div class="issue" id="p4">
+  <div class="issue-head"><span class="badge b-red">P4 · 기능 불가</span><h3>DO 미선언 시 주행 중 앱 사용 불가</h3><span class="badge b-src">지역별 주행 규제 정책 · 주행 규제 개발 가이드</span></div>
+  <div class="cols">
+    <div><h4>가이드 요건</h4><ul>
+      <li>DO 미선언 앱: Parking 사용 가능 / <b>Drive 사용 불가</b></li>
+      <li>DO 선언 앱: <code>CarUxRestrictionsManager.registerListener()</code> → <code>onUxRestrictionsChanged()</code>로 받은 <code>getActiveRestrictions()</code>에 따라 앱이 직접 기능 축소</li>
+      <li>Pleos 문서에 DO 매니페스트 선언 방법은 없음</li>
+    </ul></div>
+    <div><h4>현재 상태</h4><ul>
+      <li>기획서 5장: 홈 "주행 중 간소화된 재생 컨트롤", NOW PLAYING "주행 제한 준수"를 전제</li>
+      <li>DO 선언·<code>CarUxRestrictions</code> 연동 코드 없음</li>
+    </ul></div>
+  </div>
+  <div class="fix"><h4>해결방안</h4>
+    <p><b>권장안 A (미디어 센터 위임)</b> — 주행 중 재생 UI는 미디어 센터가 담당하고, <code>MainActivity</code>는 DO를 선언하지 않습니다. 주행 중에는 시스템이 앱 화면을 막고, 사용자는 미디어 센터·스티어링 키·음성으로만 조작합니다. 구현 비용이 가장 작습니다.</p>
+    <p><b>대안 B (전용 DO 화면)</b> — 주행용 <code>DrivingNowPlayingActivity</code>만 DO로 선언하고 제목·지역·진행·재생/일시정지만 표시. <code>CarUxRestrictions</code> 리스너로 <code>LIMIT_STRING_LENGTH</code>·<code>LIMIT_CONTENT</code> 등을 반영합니다. 나머지 화면은 DO 미선언 유지.</p>
+    <span class="verify">Pleos 확인: DO 선언 방식(AAOS 표준 <code>distractionOptimized</code> meta-data가 동일하게 적용되는지), 써드파티 앱의 DO 선언 허용 조건</span>
+  </div>
+</div>
+
+<div class="issue" id="p5">
+  <div class="issue-head"><span class="badge b-red">P5 · 반려</span><h3>스티어링 휠 키: 미디어 ID·검색 기반 재생</h3><span class="badge b-src">Music/Audio 가이드 §스티어링 휠 키</span></div>
+  <div class="cols">
+    <div><h4>가이드 요건</h4><ul>
+      <li>최소: 재생, 일시정지, 정지, <b>미디어 ID 기반 재생</b>, <b>검색 기반 재생</b></li>
+      <li>가능하면 이전/다음 트랙</li>
+    </ul></div>
+    <div><h4>현재 상태</h4><ul>
+      <li><code>GET /audio?placeId=</code> — 트랙 고유 ID 체계 없음(매핑 문서도 불일치로 표시)</li>
+      <li>오디오 콘텐츠 검색 API 없음(<code>/places/search</code>는 목적지 검색)</li>
+    </ul></div>
+  </div>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li>백엔드에 <b>스토리 리소스</b> 신설: <code>GET /audio/stories/{storyId}</code>, <code>GET /audio/stories?regionId=&amp;theme=&amp;routeId=</code>, <code>GET /audio/stories/search?q=</code>. <code>storyId</code>는 재생성되어도 바뀌지 않는 고정 키. 스키마 변경은 Flyway 마이그레이션으로.</li>
+    <li>서비스에서 <code>mediaId = "story:{storyId}"</code>, 폴더는 <code>"region:{id}"</code>, <code>"theme:{id}"</code>, <code>"recent"</code>로 규칙화.</li>
+    <li>Media3 콜백: 미디어 ID 재생은 <code>onAddMediaItems()</code>에서 ID → URI 해석, 검색 재생은 <code>onSearch()</code>/<code>onGetSearchResult()</code> 구현. 이전/다음은 큐 기반으로 기본 지원.</li>
+  </ol></div>
+</div>
+
+<!-- ============ ORANGE ============ -->
+<h2 id="orange">3. 🟠 아키텍처 결정</h2>
+
+<div class="issue" id="p6">
+  <div class="issue-head"><span class="badge b-orange">P6</span><h3>미디어 센터 사용 여부</h3><span class="badge b-src">Music/Audio 가이드 §미디어 센터</span></div>
+  <div class="tbl"><table>
+    <tr><th>항목</th><th>미디어 센터 사용</th><th>미사용</th></tr>
+    <tr><td>스티어링 휠 키</td><td class="ok">기본 제공</td><td>직접 구현, 미구현 시 반려 가능</td></tr>
+    <tr><td>미디어 앱 라이브러리</td><td class="ok">지원</td><td class="no">미지원</td></tr>
+    <tr><td>Tune Knob(다음/이전)</td><td class="ok">지원</td><td class="no">미지원</td></tr>
+    <tr><td>차량 Media 버튼</td><td class="ok">지원</td><td class="no">미지원</td></tr>
+  </table></div>
+  <div class="fix"><h4>해결방안</h4>
+    <p><b>미디어 센터 사용으로 결정</b>(P4 권장안 A와 한 세트). 프로토타입의 NOW PLAYING 디자인은 주차 중 앱 내부 화면으로 유지하고, 주행 중 재생 화면은 미디어 센터 템플릿에 맞춰 메타데이터(제목·지역명·아트워크·길이)를 충실히 채웁니다.</p>
+    <span class="verify">미디어 센터 연동 문서가 공개되어 있지 않음 — 시그니처는 추측하지 말고 Pleos 문서·문의로 확인 후 연동</span>
+  </div>
+</div>
+
+<div class="issue" id="p7">
+  <div class="issue-head"><span class="badge b-orange">P7</span><h3>Gleo AI 음성 연동(필수)</h3><span class="badge b-src">Music/Audio 가이드 §Gleo AI</span></div>
+  <p>기획서는 STT를 후순위로 두었지만, 가이드는 <b>Gleo Interface 구현</b> 또는 <b>Media3 표준 API 준수</b> 중 하나를 요구합니다. 곡(이야기) 검색 음성 기능은 <code>MediaLibraryService</code>의 검색 구현이 필수이며 <code>MediaSession</code>만으로는 제한됩니다.</p>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li><b>1단계 — 방식 2(Media3 표준)</b>: P3·P5 구현으로 자동 충족. "강릉 이야기 틀어줘" → <code>onSearch</code> → 스토리 검색 API.</li>
+    <li><b>2단계 — 방식 1(Gleo Interface)</b>: 핵심 기능 3~5개 추가. 후보: "근처 이야기 들려줘", "이 장소 다시 들려줘", "다음 지역 이야기 미리 듣기", "방문 기록 켜줘". 주차 전용 기능(퀴즈 등)은 제외.</li>
+  </ol></div>
+</div>
+
+<div class="issue" id="p8">
+  <div class="issue-head"><span class="badge b-orange">P8</span><h3>"정차" ≠ "Parking", 동승자 예외 근거 없음</h3><span class="badge b-src">지역별 주행 규제 정책</span></div>
+  <p>주행 규제는 <b>속도·기어·브레이크 신호</b>로 판정합니다. 신호 대기(D단 정차)는 Drive로 판정될 가능성이 높습니다. 기획서의 "정차 중"(경로 비교·장소 상세·퀴즈·기록 편집·설정)은 대부분 실제로는 쓸 수 없는 시점을 가리키게 됩니다. F-05의 "동승자 환경" 예외는 어느 Pleos 문서에도 없습니다.</p>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li>기획서 전체에서 "정차 중"을 <b>"주차(P) 상태"</b>로 치환하고 시연 시나리오 4번도 수정.</li>
+    <li>F-05의 "또는 플랫폼이 허용하는 동승자 환경" 문구 삭제(근거 확보 전까지).</li>
+    <li>UX 흐름 재검토: 경로·장소 선택은 <b>출발 전 주차 상태</b>에서 끝내도록 유도하고, 주행 중 새 추천은 오디오로만 안내 → 다음 주차 때 확인하는 "나중에 보기" 목록에 쌓기.</li>
+  </ol><span class="verify">Pleos 확인: Parking/Drive 판정 기준, 한국 지역의 정책 적용 열</span></div>
+</div>
+
+<div class="issue" id="p9">
+  <div class="issue-head"><span class="badge b-orange">P9</span><h3>prototype2 오디오 화면에 지도·waveform</h3><span class="badge b-src">앱 카테고리 · 주행 안전 설계</span></div>
+  <p><code>ROADFM_deepgreen.html:63-65</code> <code>page-audio</code>에 <b>경로 안내 지도 SVG</b>와 <b>waveform</b>이 있습니다. Music/Audio 카테고리의 주행 중 허용 예시는 앨범아트·단순 조작뿐이며, 지도는 Maps/Navigation 카테고리 예시입니다. 설계 가이드는 주행 중 움직이는 이미지·자동 애니메이션 최소화를 요구합니다.</p>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li>주행 상태 오디오 화면은 <b>정적 지역 아트워크 + 제목 + 지역명 + 진행 바 + 재생 컨트롤</b>로 축소.</li>
+    <li>지도·waveform은 주차 상태 화면으로 이동하거나 제거.</li>
+    <li>시연 영상에서 "주행 중 화면"과 "주차 중 화면"을 구분해 보여주면 규제 이해도를 어필할 수 있습니다.</li>
+  </ol></div>
+</div>
+
+<!-- ============ YELLOW ============ -->
+<h2 id="yellow">4. 🟡 구현 준수 규칙</h2>
+
+<div class="issue" id="p10">
+  <div class="issue-head"><span class="badge b-yellow">P10</span><h3>오디오 포커스</h3><span class="badge b-src">오디오 포커스 가이드 · Music/Audio 가이드</span></div>
+  <div class="tbl"><table>
+    <tr><th>이벤트</th><th>가이드</th><th>ROADFM 처리</th></tr>
+    <tr><td><code>AUDIOFOCUS_LOSS</code></td><td>즉시 중단·정지, 세션이 active로 남으면 안 됨</td><td><code>player.stop()</code> → 상태 <code>IDLE</code>, 자동 재개 없음</td></tr>
+    <tr><td><code>AUDIOFOCUS_LOSS_TRANSIENT</code><br>(통화, Gleo 호출 등)</td><td>일시정지 후 복귀 가능. Gleo 호출 시 즉시 중단, 필요 시 abandon</td><td>일시정지 → <code>PAUSED_BY_FOCUS</code>, GAIN 시에만 재개</td></tr>
+    <tr><td><code>AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK</code><br>(내비 안내)</td><td>볼륨 감쇄 권장. 덕킹 중 pause는 정책 의도에 맞게</td><td><b>결정 필요</b>: 말소리 콘텐츠라 겹치면 내용 손실 → 일시정지 + 3초 되감기 권장</td></tr>
+    <tr><td><code>AUDIOFOCUS_GAIN</code></td><td>정상 재생</td><td><code>PAUSED_BY_FOCUS</code>였을 때만 재개, <code>PAUSED_BY_USER</code>면 유지</td></tr>
+  </table></div>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li><code>AudioAttributes</code>: <code>usage = USAGE_MEDIA</code>, <code>contentType = SPEECH</code> → CarAudioContext MUSIC. 내비보다 우선하려고 <code>ASSISTANCE_NAVIGATION_GUIDANCE</code>를 쓰면 안 됩니다.</li>
+    <li>ExoPlayer <code>setAudioAttributes(attrs, handleAudioFocus = true)</code>로 포커스를 맡기면 SPEECH 콘텐츠는 덕킹 대신 일시정지로 처리됩니다. 영구 상실은 <code>onPlayWhenReadyChanged(reason = PLAY_WHEN_READY_CHANGE_REASON_AUDIO_FOCUS_LOSS)</code>에서 <code>stop()</code>으로 처리.</li>
+    <li>Pleos가 덕킹을 요구하면 SPEECH 대신 기본 contentType을 쓰거나, 포커스를 직접 관리(<code>AudioFocusRequest</code>)하도록 전환.</li>
+    <li><b>포커스 로그</b>: 포커스 이벤트·재생 상태 전이·duck 적용/해제를 태그 <code>RoadFmFocus</code>로 기록(가이드 로그 필수 항목 참고).</li>
+  </ol><span class="verify">Pleos 확인: 음성 콘텐츠 앱의 CAN_DUCK 시 일시정지 허용 여부</span></div>
+</div>
+
+<div class="issue" id="p11">
+  <div class="issue-head"><span class="badge b-yellow">P11</span><h3>서비스 생명주기</h3><span class="badge b-src">Music/Audio 가이드 §서비스 라이프사이클</span></div>
+  <ul>
+    <li><code>onCreate()</code>에서 <code>startService()</code>로 Started 상태 유지(bind만 하면 <code>onTaskRemoved()</code> 미수신 가능)</li>
+    <li><code>onStartCommand()</code>·재생 시점 <code>startForeground()</code></li>
+    <li><code>onTaskRemoved()</code>: 내부 정지 → <code>stopMedia()</code> → <code>stopSelf()</code> → <code>super.onTaskRemoved()</code></li>
+    <li>쓰리핑거 동작 시 <code>onStop()</code> → <code>ExoPlayer.stop()</code></li>
+  </ul>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li>Media3 <code>MediaSessionService</code>는 재생 시 foreground 전환과 알림을 자동 처리합니다. 가이드의 <code>startService()</code> 요건은 <code>onCreate()</code>에서 자기 자신을 <code>startService(Intent(this, RoadFmPlaybackService::class.java))</code>로 한 번 호출해 충족합니다.</li>
+    <li><code>onTaskRemoved()</code>는 재생 여부와 무관하게 정지·해제 후 <code>stopSelf()</code>, 마지막에 <code>super</code> 호출(<a href="#skeleton">골격</a> 참고).</li>
+    <li>컨트롤러의 stop 명령은 Media3 기본 동작이 <code>player.stop()</code>이므로 별도 오버라이드 불필요. 에뮬레이터에서 쓰리핑거 동작으로 검증.</li>
+  </ol></div>
+</div>
+
+<div class="issue" id="p12">
+  <div class="issue-head"><span class="badge b-yellow">P12</span><h3>기능별 제한 플래그 대응</h3><span class="badge b-src">지역별 주행 규제 정책 · 주행 안전 설계</span></div>
+  <p>주행 중 제한되는 대용량 텍스트(<code>LIMIT_CONTENT</code>, <code>LIMIT_STRING_LENGTH</code>), 설정(<code>NO_SETUP</code>), 키보드(<code>NO_KEYBOARD</code>) 등을 <a href="#restrict">5장 매트릭스</a>로 정리했습니다.</p>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li>장소 설명·대본 텍스트·퀴즈 해설은 <b>주행 중 표시하지 않고 오디오로만</b> 제공.</li>
+    <li>홈 첫 화면에 <b>프리셋(이 경로의 이야기)·최근 들은 이야기·즐겨찾기</b> 배치(설계 가이드의 음악 앱 원칙).</li>
+    <li>목적지 검색은 키보드보다 <b>NaviHelper로 받은 내비 목적지 → 최근 목적지 → 음성</b> 순으로 우선.</li>
+    <li>위치·방문 기록 동의 화면은 주차 중에만(북미·유럽 확장 시에도 안전).</li>
+  </ol></div>
+</div>
+
+<div class="issue" id="p13">
+  <div class="issue-head"><span class="badge b-yellow">P13</span><h3>방문 추정(F-04)의 백그라운드 위치 수집</h3><span class="badge b-src">Music/Audio 가이드 §라이프사이클 (파생 이슈)</span></div>
+  <p>앱을 스와이프로 종료하면 미디어 서비스는 정지·종료해야 합니다. 체류 판정을 미디어 서비스 안에 얹으면 그때 함께 중단됩니다.</p>
+  <div class="fix"><h4>해결방안</h4><ol>
+    <li>방문 추정은 <b>별도 컴포넌트</b>로 분리하고, 사용자가 자동 기록을 켠 <b>여정 진행 중</b>에만 동작.</li>
+    <li>앱 종료 시 여정도 종료로 간주(가장 단순·안전). 지속 수집이 꼭 필요하면 <code>foregroundServiceType="location"</code> 별도 서비스 + 백그라운드 위치 권한 → 개인정보 동의 문구에 반영.</li>
+    <li>Pleos 위치 SDK 가용성 확인 결과에 맞춰 구현 범위 결정(기획서 리스크 표 519행).</li>
+  </ol></div>
+</div>
+
+<!-- ============ RESTRICT ============ -->
+<h2 id="restrict">5. 주행 중 기능 허용 매트릭스</h2>
+<p>Pleos 정책 표의 "그외 지역" 열이 한국에 적용된다고 <b>가정</b>했습니다(한국 별도 항목 없음 — 문의 필요). DO 미선언이면 주행 중에는 앱 전체가 막힙니다.</p>
+<div class="tbl"><table>
+<tr><th>ROADFM 기능</th><th>관련 플래그</th><th>북미 주행</th><th>유럽 주행</th><th>그외 주행</th><th>ROADFM 정책</th></tr>
+<tr><td>이야기 재생·일시정지·넘기기</td><td>— (Music/Audio 허용 예시)</td><td class="ok">✅</td><td class="ok">✅</td><td class="ok">✅</td><td>미디어 센터·스티어링 키·음성</td></tr>
+<tr><td>지역 아트워크·제목 표시</td><td>—</td><td class="ok">✅</td><td class="ok">✅</td><td class="ok">✅</td><td>정적 이미지, 짧은 제목</td></tr>
+<tr><td>미디어 앱 로그인·설정·검색</td><td>NO_SETUP · NO_KEYBOARD · NO_FILTERING</td><td class="no">⛔</td><td class="no">⛔</td><td class="ok">✅</td><td>주차 전용으로 통일</td></tr>
+<tr><td>키보드 입력(목적지 검색)</td><td>NO_KEYBOARD</td><td class="no">⛔</td><td class="ok">✅</td><td class="ok">✅</td><td>주차 전용 + 음성 우선</td></tr>
+<tr><td>통합 검색</td><td>NO_KEYBOARD · NO_FILTERING</td><td>음성한정</td><td class="ok">✅</td><td class="ok">✅</td><td>Gleo 음성 검색</td></tr>
+<tr><td>장소 설명·대본 텍스트</td><td>LIMIT_CONTENT · LIMIT_STRING_LENGTH</td><td class="no">⛔</td><td class="no">⛔</td><td class="no">⛔</td><td>주행 중 오디오로만</td></tr>
+<tr><td>동영상</td><td>NO_VIDEO</td><td class="no">⛔</td><td class="no">⛔</td><td class="no">⛔</td><td>해당 기능 없음 유지</td></tr>
+<tr><td>경로 지도</td><td>(Maps/Navigation 카테고리 예시)</td><td colspan="3">Music/Audio 카테고리 허용 근거 없음</td><td>주차 전용 또는 제거</td></tr>
+<tr><td>경로 비교·장소 추천·경유지 추가</td><td>(Mobility Services 카테고리 예시)</td><td colspan="3">Music/Audio 카테고리 허용 근거 없음</td><td>주차 전용</td></tr>
+<tr><td>퀴즈·스탬프</td><td>"게임 등 주의 분산 활동 유도 금지"</td><td class="no">⛔</td><td class="no">⛔</td><td class="no">⛔</td><td>주차 전용</td></tr>
+<tr><td>여정 기록 확인·편집</td><td>LIMIT_CONTENT</td><td class="no">⛔</td><td class="no">⛔</td><td class="no">⛔</td><td>주차 전용</td></tr>
+</table></div>
+
+<!-- ============ SKELETON ============ -->
+<h2 id="skeleton">6. 코드·매니페스트 골격</h2>
+<div class="callout warn">Android/AAOS·Media3 표준 API만 사용했습니다. <code>androidx.car.app.launchable</code>는 Pleos 가이드 명시 항목이고, 미디어 센터 연동 API와 DO 선언 방식은 Pleos 문서 확인 전까지 넣지 않습니다(CLAUDE.md 규칙).</div>
+
+<h4>app/build.gradle.kts</h4>
+<pre><code>dependencies {
+    implementation("androidx.media3:media3-session:1.5.1")
+    implementation("androidx.media3:media3-exoplayer:1.5.1")
+}</code></pre>
+
+<h4>AndroidManifest.xml</h4>
+<pre><code>&lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+&lt;uses-permission android:name="android.permission.FOREGROUND_SERVICE" /&gt;
+&lt;uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" /&gt;
+&lt;uses-permission android:name="android.permission.POST_NOTIFICATIONS" /&gt;
+
+&lt;application
+    android:appCategory="audio"
+    ... &gt;
+
+    &lt;meta-data
+        android:name="androidx.car.app.launchable"
+        android:value="true" /&gt;
+
+    &lt;service
+        android:name=".playback.RoadFmPlaybackService"
+        android:exported="true"
+        android:foregroundServiceType="mediaPlayback"&gt;
+        &lt;intent-filter&gt;
+            &lt;action android:name="androidx.media3.session.MediaLibraryService" /&gt;
+            &lt;action android:name="android.media.browse.MediaBrowserService" /&gt;
+        &lt;/intent-filter&gt;
+    &lt;/service&gt;
+&lt;/application&gt;</code></pre>
+
+<h4>RoadFmPlaybackService.kt</h4>
+<pre><code>class RoadFmPlaybackService : MediaLibraryService() {
+    private var session: MediaLibrarySession? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        // 가이드: bind 만으로는 onTaskRemoved 를 못 받을 수 있어 Started 상태 유지
+        startService(Intent(this, RoadFmPlaybackService::class.java))
+
+        val attrs = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_SPEECH) // 덕킹 대신 일시정지 (P10 결정에 따라 조정)
+            .build()
+        val player = ExoPlayer.Builder(this)
+            .setAudioAttributes(attrs, /* handleAudioFocus = */ true)
+            .setHandleAudioBecomingNoisy(true)
+            .build()
+        player.addListener(object : Player.Listener {
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                // AUDIOFOCUS_LOSS(영구 상실) → 정지, 세션이 활성으로 남지 않게
+                if (reason == Player.PLAY_WHEN_READY_CHANGE_REASON_AUDIO_FOCUS_LOSS) player.stop()
+            }
+        })
+        session = MediaLibrarySession.Builder(this, player, LibraryCallback(/* repo */)).build()
+    }
+
+    override fun onGetSession(controller: MediaSession.ControllerInfo) = session
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        session?.player?.run { stop(); clearMediaItems() } // 내부 정지 로직 먼저
+        stopSelf()
+        super.onTaskRemoved(rootIntent)                    // super 는 마지막
+    }
+
+    override fun onDestroy() {
+        session?.run { player.release(); release() }
+        session = null
+        super.onDestroy()
+    }
+}
+
+// LibraryCallback 구현 대상
+//  onGetLibraryRoot   → 루트: 이 경로의 이야기 / 지역별 / 주제별 / 최근
+//  onGetChildren      → 폴더별 story 목록 (단일 혼합 리스트 금지)
+//  onGetItem          → "story:{storyId}" 단건
+//  onSearch / onGetSearchResult → GET /audio/stories/search?q=  (Gleo·검색 재생)
+//  onAddMediaItems    → mediaId → 스트림/캐시 URI 해석 (미디어 ID 재생)
+//  onPlaybackResumption → 시스템 재개 요청 시에만 마지막 항목 반환 (자동 재생 아님)</code></pre>
+
+<!-- ============ DOCS ============ -->
+<h2 id="docs">7. 기획 문서 수정 목록</h2>
+<div class="tbl"><table>
+<tr><th>문서·위치</th><th>현재</th><th>수정안</th></tr>
+<tr><td>master §3 시나리오 4</td><td>정차 상태에서 경로와 장소 탐색</td><td>출발 전 <b>주차 상태</b>에서 탐색</td></tr>
+<tr><td>master §3 시나리오 6</td><td>이동 중 위치에 맞는 오디오가 재생된다</td><td>사용자가 시작한 재생 세션 동안 다음 지역 이야기가 목록에 이어진다</td></tr>
+<tr><td>master §4 F-02</td><td>오디오 포커스 변화에 대응</td><td>LOSS=정지, TRANSIENT=일시정지·복귀, CAN_DUCK=(결정안), Gleo 호출=즉시 중단 명시</td></tr>
+<tr><td>master §4 F-05</td><td>정차 또는 동승자 환경</td><td>주차 상태에서만</td></tr>
+<tr><td>master §5 화면 표</td><td>"정차 중" 5곳, 홈/NOW PLAYING 주행 중 컨트롤</td><td>"주차(P) 상태", 주행 중 재생 화면은 미디어 센터</td></tr>
+<tr><td>master §7 기술 스택 238행</td><td>MediaSession + 미디어 서비스</td><td>Media3 MediaLibraryService + ExoPlayer, 미디어 센터 연동</td></tr>
+<tr><td>master §8 주행 안전 1·6</td><td>CarUxRestrictions 기반 / 카테고리 확인 필요</td><td>DO 미선언 + 미디어 센터 위임(권장안 A), 카테고리 Music/Audio·Podcast</td></tr>
+<tr><td>master 리스크 표 520행</td><td>주행 중 오디오/퀴즈/지도 허용 범위 미확인</td><td>퀴즈·지도 주행 중 불가로 확정, 남은 쟁점: 카테고리 심사</td></tr>
+<tr><td>API 매핑 16행</td><td>출발하기 → 오디오 자동 재생, <code>GET /audio?placeId=</code></td><td>명시적 재생, <code>/audio/stories</code> 리소스</td></tr>
+<tr><td>API 매핑 21행</td><td><code>autoAudio</code></td><td><code>continuousQueue</code> (기본 false)</td></tr>
+<tr><td>prototype2 :90 / :160</td><td>자동 재생 토글 기본 ON, 출발하기 시 재생</td><td>"이어서 듣기" 기본 OFF, 출발과 재생 분리</td></tr>
+<tr><td>prototype2 :63-65</td><td>오디오 화면에 지도·waveform</td><td>정적 아트워크 + 메타 + 컨트롤</td></tr>
+</table></div>
+
+<!-- ============ ASK ============ -->
+<h2 id="ask">8. Pleos 문의 목록</h2>
+<ol>
+  <li>비오디오 기능(경로 추천·방문 기록·퀴즈)을 포함한 앱이 <b>Music/Audio 카테고리 심사</b>를 통과할 수 있는지, 마켓 카테고리 복수 지정이 가능한지</li>
+  <li>하위 카테고리로 <b>Podcast</b> 지정이 적절한지(사전 생성 TTS 지역 이야기)</li>
+  <li>사용자가 시작한 세션 중 <b>위치 기반 큐 추가</b>가 자동 재생 금지에 해당하지 않는지</li>
+  <li><b>미디어 센터</b> 연동 문서·API 제공 범위</li>
+  <li>스티어링 휠 키 요건(MediaSessionCompat 기준)을 <b>Media3 레거시 호환</b>으로 충족하는지</li>
+  <li>써드파티 앱의 <b>DO 선언 방식·허용 조건</b></li>
+  <li><b>한국</b> 주행 규제 정책 적용 열과 Parking/Drive 판정 기준</li>
+  <li>음성 콘텐츠 앱의 <b>CAN_DUCK 시 일시정지</b> 허용 여부</li>
+  <li>동승자 화면·동승자 모드 예외 존재 여부</li>
+</ol>
+<p class="meta">문의 채널: Pleos Playground 콘솔 또는 문서에 안내된 partnership 창구.</p>
+
+<!-- ============ PLAN ============ -->
+<h2 id="plan">9. 실행 순서</h2>
+<h4>1단계 — 문서·프로토타입 정리 (바로)</h4>
+<ul class="check">
+  <li>7장 기획 문서 수정 반영</li>
+  <li>prototype2 자동 재생 토글·출발 버튼·오디오 화면 수정</li>
+  <li>8장 문의 1~4번 우선 발송</li>
+</ul>
+<h4>2단계 — 재생 골격 (P0, F-02)</h4>
+<ul class="check">
+  <li>Media3 의존성·매니페스트·<code>RoadFmPlaybackService</code> 추가, <code>assembleDebug</code> 확인</li>
+  <li>로컬 샘플 음원 1개로 재생·일시정지·정지·이전/다음 확인</li>
+  <li>포커스 시나리오 검증: 내비 안내(CAN_DUCK), 통화(TRANSIENT/LOSS), Gleo 호출, 앱 스와이프 종료, 쓰리핑거</li>
+  <li>재생 상태 머신과 "이어서 듣기" 큐 로직</li>
+</ul>
+<h4>3단계 — 콘텐츠·검색</h4>
+<ul class="check">
+  <li>백엔드 <code>/audio/stories</code> + Flyway 마이그레이션(고정 <code>storyId</code>)</li>
+  <li>브라우즈 트리(경로/지역/주제/최근), <code>onSearch</code>, <code>onAddMediaItems</code></li>
+  <li>Gleo 음성으로 "○○ 이야기 틀어줘" 동작 확인</li>
+</ul>
+<h4>4단계 — 연동·주차 화면</h4>
+<ul class="check">
+  <li>미디어 센터 연동(문서 확보 후)</li>
+  <li>Compose 주차 화면들(F-03·F-04·F-05)</li>
+  <li>방문 추정 컴포넌트 분리(P13), Gleo Interface 기능 3~5개(P7 2단계)</li>
+</ul>
+
+<!-- ============ REFS ============ -->
+<h2 id="refs">10. 참조 문서</h2>
+<ul>
+  <li><a href="https://document.pleos.ai/docs/pleos-only/vehicle-app-developer-guide/music-audio-app-developement-guide">Music/Audio 앱 개발 가이드</a></li>
+  <li><a href="https://document.pleos.ai/docs/pleos-only/vehicle-app-developer-guide/driving-restriction-development-guide">주행 규제 개발 가이드</a></li>
+  <li><a href="https://document.pleos.ai/docs/pleos-only/vehicle-app-planning-guide/driving-restiction-policy">지역별 주행 규제 정책</a></li>
+  <li><a href="https://document.pleos.ai/docs/pleos-only/vehicle-app-planning-guide/driver-distraction-guideline">주행 안전을 고려한 설계</a></li>
+  <li><a href="https://document.pleos.ai/docs/pleos-only/vehicle-app-planning-guide/app-category">앱 카테고리별 제한 및 예외</a></li>
+  <li><a href="https://document.pleos.ai/docs/pleos-only/vehicle-app-developer-guide/audio-focus-development-guide/audio-focus-development">오디오 포커스 개발 가이드</a></li>
+  <li>미확인(다음 분석 대상): Suspend 모드 오디오 포커스 가이드, TTS·음성 안내 선행 묵음 가이드, App Review Guidelines, 미디어 센터 문서</li>
+</ul>
+
+<footer>ROADFM 내부 검토 자료 · Pleos 문서는 2026-11-12 기준으로 확인했으며 이후 개정될 수 있습니다.</footer>
+</div>
+</body>
+</html>

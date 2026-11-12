@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROADFM 사용 흐름 시연</title>
+<meta name="description" content="ROADFM 사용자 세팅·사용 흐름 자동 재생 시연 (UX Simulation)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--k:1;--base:#111312;--surface:#1a1c1b;--surface2:#202321;--line:#2a2d2b;--ink:#e4e7e4;--muted:#9a9f9b;--dim:#737a75;--teal:#a3c585;--amber:#e2a85f;--navi:#1d2a3a;--navi2:#16212e;--naviAccent:#4aa3ff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#070807;color:var(--ink);font-family:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{position:absolute;left:50%;top:50%;width:1280px;height:880px;transform:translate(-50%,-50%) scale(var(--k));transform-origin:50% 50%}
+/* stage = 차량 화면 */
+.stage{position:relative;width:1280px;height:720px;border-radius:26px;border:9px solid #050605;background:var(--base);overflow:hidden;box-shadow:0 20px 60px #0008}
+.scene{position:absolute;inset:0;opacity:0;transition:opacity .45s}
+.scene.on{opacity:1}
+.still .scene{transition:none}
+/* caption */
+.cap{height:160px;display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:18px 10px 0}
+.cap-tag{display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:150px}
+.tag{font-size:15px;font-weight:800;padding:6px 14px;border-radius:20px;background:#a3c585;color:#111312;white-space:nowrap}
+.tag.auto{background:#8fb3d9}.tag.drive{background:var(--amber)}.tag.once{background:#c9b6e8}.tag.rest{background:#a3c585}
+.stepno{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+.cap-text h2{margin:0 0 6px;font-size:25px;letter-spacing:-.03em}
+.cap-text p{margin:0;font-size:16px;color:#c8cdc9;line-height:1.6}
+.bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:#1a1c1b}
+.bar i{display:block;height:100%;width:0;background:var(--teal)}
+.ctrl{position:fixed;right:14px;bottom:12px;display:flex;gap:6px;z-index:10;opacity:.25;transition:opacity .2s}
+.ctrl:hover{opacity:1}
+.ctrl button{background:#1a1c1b;border:1px solid var(--line);border-radius:16px;padding:6px 12px;font-size:12px;color:var(--muted)}
+.sim{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:5;font-size:11px;color:#c8cdc9;background:#000a;border:1px solid #333;border-radius:12px;padding:4px 10px;letter-spacing:.04em}
+.gear{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;font-size:13px;font-weight:800;border-radius:12px;padding:4px 12px}
+.gear.p{background:#a3c585;color:#111312}.gear.d{background:var(--amber);color:#111312}
+
+/* ===== 공통 UI ===== */
+.svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tap{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 6px #ffffff33;animation:tap 1.2s ease-out infinite;z-index:6;pointer-events:none}
+@keyframes tap{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.4);opacity:0}}
+.bubble{position:absolute;z-index:6;background:#fff;color:#111;border-radius:18px;padding:12px 18px;font-size:18px;font-weight:700;box-shadow:0 10px 30px #0007;display:flex;gap:10px;align-items:center;animation:pop .35s ease-out}
+.bubble.bnavi{background:#1e6fd9;color:#fff}
+.bubble.sys{background:#2a2d2b;color:#e4e7e4;border:1px solid #484d49}
+@keyframes pop{from{transform:translateY(8px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.wheel{position:absolute;z-index:6;left:40px;bottom:40px;display:flex;align-items:center;gap:12px;background:#000c;border:1px solid #444;border-radius:40px;padding:10px 18px 10px 10px;font-size:16px;font-weight:700;animation:pop .35s}
+.wheel b{width:44px;height:44px;border-radius:50%;background:#2a2d2b;border:2px solid #777;display:grid;place-items:center;font-size:18px}
+.toast{position:absolute;z-index:6;right:28px;bottom:28px;background:#242725;border:1px solid #484d49;border-radius:12px;padding:14px 18px;font-size:15px;display:flex;gap:10px;align-items:center;animation:pop .35s}
+
+/* ===== ROADFM 앱 셸 ===== */
+.app{position:absolute;inset:0;display:flex}
+.side{width:88px;background:#0b0c0b;display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:16px}
+.logo{width:42px;height:42px;border-radius:13px;background:var(--teal);color:#111;display:grid;place-items:center;margin-bottom:22px}
+.nav{font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border-radius:12px;width:70px}
+.nav.on{background:#202321;color:#fff}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:58px;border-bottom:1px solid var(--line);background:var(--surface);display:flex;align-items:center;padding:0 28px;justify-content:space-between}
+.word{font-weight:800;letter-spacing:.12em;font-size:21px}.word i{color:var(--teal);font-style:normal}
+.clock{font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.page{flex:1;padding:26px 30px;display:flex;flex-direction:column;gap:16px;min-height:0}
+.h1{font-size:30px;font-weight:700;letter-spacing:-.04em;margin:0}
+.sub{font-size:14px;color:var(--muted);margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.choice{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:20px 22px;font-size:20px;font-weight:700}
+.choice.on{border-color:var(--teal);background:#243024}
+.choice .ck{width:26px;height:26px;border-radius:50%;border:2px solid #555;display:grid;place-items:center;font-size:14px}
+.choice.on .ck{background:var(--teal);border-color:var(--teal);color:#111}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:14px 22px;font-weight:800;font-size:16px;background:var(--teal);color:#111}
+.btn.sec{background:var(--surface2);color:var(--ink);border:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding:12px 0}
+.row:first-child{border-top:0}
+.row .t{flex:1}.row .t b{display:block;font-size:16px}.row .t small{font-size:12px;color:var(--muted)}
+.num{width:34px;height:34px;border-radius:10px;background:#242725;color:var(--teal);display:grid;place-items:center;font-weight:800;font-size:13px}
+.pill{font-size:12px;font-weight:700;border:1px solid var(--line);background:#202321;border-radius:16px;padding:6px 11px;white-space:nowrap;color:#c8cdc9}
+.pill.on{background:var(--teal);border-color:var(--teal);color:#111}
+.toggle{width:52px;height:30px;border-radius:16px;background:#3a3e3b;position:relative;flex:none}
+.toggle:after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:#bbb;transition:.3s}
+.toggle.on{background:var(--teal)}.toggle.on:after{left:26px;background:#111}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
+.navicard{display:flex;align-items:center;gap:14px;background:#202321;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.navicard .ic{width:42px;height:42px;border-radius:12px;background:var(--teal);color:#111;display:grid;place-items:center}
+.navicard b{font-size:20px;display:block}.navicard small{font-size:11px;color:var(--muted)}
+.badge{font-size:11px;font-weight:800;background:var(--teal);color:#111;border-radius:10px;padding:3px 9px;white-space:nowrap}
+.suggest{border:1px dashed #5d7a4a;background:#18201a;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px}
+.suggest .t b{font-size:15px}.suggest .t small{font-size:12px;color:#b9c9ad}
+
+/* ===== 현대차 내비 (자리표시) ===== */
+.navi{position:absolute;inset:0;background:radial-gradient(1200px 600px at 60% 70%,#22344a,#141d28);overflow:hidden}
+.navi .grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:64px 64px}
+.navi .road{position:absolute;inset:0}
+.navi-label{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);text-align:center;color:#9fb6cf;opacity:.55;font-size:15px;letter-spacing:.06em}
+.navi-label b{display:block;font-size:30px;letter-spacing:.02em;color:#c8d8ea;margin-bottom:6px}
+.tbt{position:absolute;left:24px;top:56px;background:#0e1620ee;border:1px solid #2c3f55;border-radius:16px;padding:16px 20px;display:flex;gap:16px;align-items:center;min-width:330px}
+.tbt .arrow{width:56px;height:56px;border-radius:12px;background:#1e6fd9;display:grid;place-items:center;font-size:30px;font-weight:900}
+.tbt b{font-size:28px;display:block}.tbt span{font-size:14px;color:#9fb6cf}
+.eta{position:absolute;left:24px;bottom:22px;background:#0e1620ee;border:1px solid #2c3f55;border-radius:14px;padding:12px 18px;display:flex;gap:22px;font-size:15px;color:#c8d8ea}
+.eta b{font-size:20px;color:#fff}
+.navi-brand{position:absolute;left:24px;top:16px;font-size:12px;color:#9fb6cf;letter-spacing:.05em}
+.navi-search{position:absolute;inset:0;background:#141d28;display:flex;flex-direction:column;padding:56px 40px 30px;gap:16px}
+.navi-input{background:#0e1620;border:2px solid #1e6fd9;border-radius:14px;padding:16px 20px;font-size:24px;font-weight:700;display:flex;gap:12px;align-items:center}
+.navi-input .cur{width:2px;height:28px;background:#4aa3ff;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.navi-res{background:#0e1620;border:1px solid #2c3f55;border-radius:14px}
+.navi-res div{padding:16px 20px;border-top:1px solid #2c3f55;font-size:18px}.navi-res div:first-child{border-top:0}
+.navi-res small{display:block;font-size:13px;color:#9fb6cf;margin-top:2px}
+.navi-go{align-self:flex-end;background:#1e6fd9;color:#fff;border:0;border-radius:14px;padding:16px 34px;font-size:20px;font-weight:800}
+/* ROADFM 미니 카드 (시스템 미디어 영역) */
+.mini{position:absolute;right:22px;bottom:22px;width:400px;background:#111312f2;border:1px solid #3a3e3b;border-radius:18px;padding:14px;display:grid;grid-template-columns:76px 1fr;gap:14px;align-items:center;box-shadow:0 12px 40px #0009}
+.mini .art{width:76px;height:76px;border-radius:12px;background:linear-gradient(135deg,#3d5a45,#1f2d24);display:flex;align-items:flex-end;padding:7px;font-size:13px;font-weight:800}
+.mini .art.coffee{background:linear-gradient(135deg,#5a4636,#2a211a)}
+.mini small{font-size:11px;color:var(--teal);font-weight:700}
+.mini b{display:block;font-size:17px;margin:3px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini .pb{height:4px;background:#2a2d2b;border-radius:3px;overflow:hidden}.mini .pb i{display:block;height:100%;background:var(--teal)}
+.mini .ctl{display:flex;gap:10px;margin-top:9px;align-items:center}
+.mini .ctl span{width:34px;height:34px;border-radius:50%;background:#202321;display:grid;place-items:center;font-size:13px}
+.mini .ctl span.pp{background:var(--teal);color:#111;width:38px;height:38px}
+.mini .ctl em{font-style:normal;font-size:11px;color:var(--muted);margin-left:auto}
+.mini-label{position:absolute;right:22px;bottom:150px;font-size:11px;color:#c8cdc9;background:#000a;border-radius:8px;padding:3px 8px}
+.reco{position:absolute;right:22px;bottom:150px;width:400px;background:#1a1c1bf5;border:1px solid #5d7a4a;border-radius:16px;padding:14px 16px;font-size:15px;line-height:1.55;animation:pop .35s;z-index:4}
+.reco small{display:block;color:var(--teal);font-weight:800;font-size:12px;margin-bottom:4px}
+.locked{position:absolute;inset:0;background:#000b;display:grid;place-items:center;z-index:5;animation:pop .3s}
+.locked div{background:#1a1c1b;border:1px solid #3a3e3b;border-radius:18px;padding:26px 32px;text-align:center;font-size:18px;font-weight:700}
+.locked small{display:block;font-size:14px;color:var(--muted);font-weight:500;margin-top:8px}
+/* 타이틀/요약 */
+.title{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 110px;background:radial-gradient(900px 500px at 75% 30%,#243024,#111312)}
+.title .k{font-size:15px;letter-spacing:.2em;color:var(--teal);font-weight:800}
+.title h1{font-size:64px;letter-spacing:-.04em;margin:14px 0 18px;line-height:1.15}
+.title p{font-size:22px;color:#c8cdc9;margin:0;line-height:1.6}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+.sum div{background:#1a1c1bcc;border:1px solid var(--line);border-radius:16px;padding:20px}
+.sum b{display:block;font-size:14px;color:var(--teal);margin-bottom:8px}
+.sum span{font-size:18px;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="stage" id="stage"></div>
+  <div class="cap">
+    <div class="cap-tag"><span class="tag" id="tag"></span><span class="stepno" id="stepno"></span></div>
+    <div class="cap-text"><h2 id="capTitle"></h2><p id="capText"></p></div>
+  </div>
+  <div class="bar"><i id="bar"></i></div>
+</div>
+<div class="ctrl"><button id="prev">◀ 이전</button><button id="play">❚❚ 일시정지</button><button id="next">다음 ▶</button><button id="restart">처음부터</button></div>
+<script>
+(() => {
+'use strict';
+const I={
+ route:'<svg class="svg" viewBox="0 0 24 24"><path d="M6 19c2-7 12-3 12-11"/><circle cx="6" cy="19" r="2"/><path d="M18 3a3 3 0 0 0-3 3c0 2 3 5 3 5s3-3 3-5a3 3 0 0 0-3-3Z"/></svg>',
+ logo:'<svg class="svg" viewBox="0 0 32 32" style="width:26px;height:26px;stroke-width:2.2"><path d="M3 17c6-13 9 13 15-2 3-8 6-9 11-2M3 22h26"/></svg>',
+ pin:'<svg class="svg" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+ book:'<svg class="svg" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 3h12v18l-6-4-6 4Z"/></svg>',
+};
+/* ---------- 화면 조각 ---------- */
+const gear=g=>g?`<div class="gear ${g==='P'?'p':'d'}">${g==='P'?'🅿️ 주차':'🚗 주행 중'}</div>`:'';
+const sim='<div class="sim">UX PROTOTYPE / SIMULATION</div>';
+const tap=(x,y)=>`<div class="tap" style="left:${x}px;top:${y}px"></div>`;
+const app=(nav,body,clock='09:12')=>`<div class="app"><div class="side"><div class="logo">${I.logo}</div>${['여정 탐색','이야기','여정 기록','설정'].map(n=>`<div class="nav ${n===nav?'on':''}">${n}</div>`).join('')}</div><div class="main"><div class="top"><div class="word">ROADFM<i>.</i></div><div class="clock">${clock}</div></div><div class="page">${body}</div></div></div>`;
+const naviMap=(o={})=>`<div class="navi"><div class="grid"></div>
+<svg class="road" viewBox="0 0 1262 702" preserveAspectRatio="none"><path d="M560 720 C 600 560, 520 470, 640 380 S 820 260, 900 120" fill="none" stroke="#0b121b" stroke-width="40"/><path d="M560 720 C 600 560, 520 470, 640 380 S 820 260, 900 120" fill="none" stroke="#4aa3ff" stroke-width="14" stroke-linecap="round"/><circle cx="590" cy="600" r="16" fill="#fff" stroke="#1e6fd9" stroke-width="6"/></svg>
+<div class="navi-brand">현대차 내비 · 자리표시(실제 화면 아님)</div>
+<div class="navi-label"><b>현대차 내비</b>길 안내 중</div>
+<div class="tbt"><div class="arrow">${o.turn||'↑'}</div><div><b>${o.dist||'12km'}</b><span>${o.road||'영동고속도로 · 강릉 방면'}</span></div></div>
+<div class="eta"><span>목적지 <b>강릉</b></span><span>도착 <b>${o.eta||'11:57'}</b></span><span>남은 시간 <b>${o.left||'2시간 45분'}</b></span></div></div>`;
+const mini=(o={})=>`<div class="mini-label">ROADFM · 시스템 미디어 영역</div><div class="mini"><div class="art ${o.coffee?'coffee':''}">${o.region||'평창'}</div><div><small>ROADFM · ${o.status||'재생 중'}</small><b>${o.title||'대관령을 넘는 사람들'}</b><div class="pb"><i style="width:${o.pct??18}%"></i></div><div class="ctl"><span>⏮</span><span class="pp">${o.playing===false?'▶':'❚❚'}</span><span>⏭</span><em>${o.time||'00:39 / 03:37'}</em></div></div></div>`;
+const drive=(o={},extra='')=>naviMap(o.navi)+(o.noMini?'':mini(o.mini))+extra;
+
+/* ---------- 장면 ---------- */
+const scenes=[
+{tag:['','시연'],title:'ROADFM 사용 흐름',text:'내비는 길을, ROADFM은 이야기를. 사용자가 무엇을 세팅하고 어떻게 쓰는지 순서대로 보여드릴게요.',frames:[[5000,`<div class="title"><div class="k">ROADFM · 로디엠</div><h1>지나가는 길의 이야기를<br>들려주는 오디오 여행 채널</h1><p>주행 중엔 귀로, 주차 중엔 눈으로.<br>길 안내는 현대차 내비가, 이야기는 ROADFM이 맡아요.</p></div>${sim}`]]},
+
+{tag:['once','처음 한 번'],title:'① 좋아하는 여행 테마 고르기',text:'ROADFM을 처음 열면 좋아하는 여행 테마를 골라요. 한 번만 하면 되고, 나중에 설정에서 바꿀 수 있어요.',frames:[
+ [2200,gear('P')+sim+app('여정 탐색',`<p class="sub">처음 오셨네요</p><h1 class="h1">어떤 여행을 좋아하세요?</h1><div style="display:flex;flex-direction:column;gap:12px;margin-top:6px;max-width:640px"><div class="choice">자연 · 풍경<span class="ck"></span></div><div class="choice">카페 · 미식<span class="ck"></span></div><div class="choice">역사 · 문화<span class="ck"></span></div></div>`)],
+ [2000,gear('P')+sim+app('여정 탐색',`<p class="sub">처음 오셨네요</p><h1 class="h1">어떤 여행을 좋아하세요?</h1><div style="display:flex;flex-direction:column;gap:12px;margin-top:6px;max-width:640px"><div class="choice on">자연 · 풍경<span class="ck">✓</span></div><div class="choice">카페 · 미식<span class="ck"></span></div><div class="choice on">역사 · 문화<span class="ck">✓</span></div></div><div style="display:flex;gap:10px"><button class="btn">이대로 시작하기</button><button class="btn sec">나중에 고를게요</button></div>`)+tap(190,442)],
+ [2000,gear('P')+sim+app('여정 탐색',`<p class="sub">처음 오셨네요</p><h1 class="h1">어떤 여행을 좋아하세요?</h1><div style="display:flex;flex-direction:column;gap:12px;margin-top:6px;max-width:640px"><div class="choice on">자연 · 풍경<span class="ck">✓</span></div><div class="choice">카페 · 미식<span class="ck"></span></div><div class="choice on">역사 · 문화<span class="ck">✓</span></div></div><div style="display:flex;gap:10px"><button class="btn">이대로 시작하기</button><button class="btn sec">나중에 고를게요</button></div>`)+`<div class="toast">✓ 취향을 저장했어요. 설정에서 언제든 바꿀 수 있어요.</div>`]]},
+
+{tag:['once','처음 한 번'],title:'② 재생·기록 옵션 확인 (선택)',text:'"이어서 듣기"와 "방문 자동 기록"은 기본으로 꺼져 있어요. 원하는 사람만 직접 켭니다.',frames:[
+ [2300,gear('P')+sim+app('설정',`<h1 class="h1">이용 환경 설정</h1><div class="card" style="display:flex;flex-direction:column;gap:6px;max-width:760px"><div class="row"><div class="t"><b>이어서 듣기</b><small>듣고 있을 때만, 이야기가 끝나면 다음 지역 이야기를 이어서 들려줘요.</small></div><div class="toggle"></div></div><div class="row"><div class="t"><b>방문 자동 기록</b><small>들른 장소에 머물면 여정 기록에 남겨요. 위치 기록에 동의해야 해요.</small></div><div class="toggle"></div></div></div>`)],
+ [2600,gear('P')+sim+app('설정',`<h1 class="h1">이용 환경 설정</h1><div class="card" style="display:flex;flex-direction:column;gap:6px;max-width:760px"><div class="row"><div class="t"><b>이어서 듣기</b><small>듣고 있을 때만, 이야기가 끝나면 다음 지역 이야기를 이어서 들려줘요.</small></div><div class="toggle on"></div></div><div class="row"><div class="t"><b>방문 자동 기록</b><small>들른 장소에 머물면 여정 기록에 남겨요. 위치 기록에 동의해야 해요.</small></div><div class="toggle on"></div></div></div>`)+tap(812,262)+`<div class="toast">✓ 방문 기록 동의 · 언제든 끄고 기록을 지울 수 있어요.</div>`]]},
+
+{tag:['','매번'],title:'③ 현대차 내비에 목적지 입력',text:'여행을 떠날 때는 평소처럼 현대차 내비에 목적지를 넣고 안내를 시작해요. ROADFM에서 목적지를 따로 입력하지 않아요.',frames:[
+ [2200,gear('P')+sim+`<div class="navi-search"><div class="navi-brand" style="top:18px">현대차 내비 · 자리표시(실제 화면 아님)</div><div class="navi-input">🔍 강릉<span class="cur"></span></div><div class="navi-res"><div>강릉시청<small>강원특별자치도 강릉시</small></div><div>강릉역<small>강원특별자치도 강릉시 용지로</small></div></div></div>`],
+ [2400,gear('P')+sim+`<div class="navi-search"><div class="navi-brand" style="top:18px">현대차 내비 · 자리표시(실제 화면 아님)</div><div class="navi-input">🔍 강릉<span class="cur"></span></div><div class="navi-res"><div style="background:#1a2c44">강릉시청<small>강원특별자치도 강릉시 · 2시간 45분</small></div><div>강릉역<small>강원특별자치도 강릉시 용지로</small></div></div><button class="navi-go">안내 시작</button></div>`+tap(1145,368)],
+ [2000,gear('P')+sim+naviMap()]]},
+
+{tag:['auto','자동'],title:'④ ROADFM이 내비 목적지를 받아 이야기 준비',text:'ROADFM은 내비 목적지를 받아, 저장된 취향으로 이 길의 이야기와 들를 곳을 준비해요. 이때 혼자 재생하지는 않아요.',frames:[
+ [3200,gear('P')+sim+naviMap()+`<div class="bubble sys" style="right:22px;top:56px;max-width:440px;font-size:16px">📻 <span><b style="display:block;font-size:13px;color:#a3c585">ROADFM</b>강릉 가는 길 이야기 3개가 준비됐어요.<br><span style="font-weight:500;color:#c8cdc9;font-size:14px">핸들 ▶ 버튼이나 "이야기 들려줘"로 시작</span></span></div>`+mini({playing:false,status:'대기 중',pct:0,time:'00:00 / 03:37'})]]},
+
+{tag:['rest','출발 전 · 선택'],title:'⑤ (선택) 길 위의 들를 곳 보기',text:'출발 전에 ROADFM을 열면 내비 경로 근처 추천 장소를 볼 수 있어요. 다른 길로 가고 싶으면 내비에 경유지를 추가하는 방식이에요. 내비 경유지는 최대 2개예요.',frames:[
+ [2600,gear('P')+sim+app('여정 탐색',`<div class="navicard"><div class="ic">${I.route}</div><div style="flex:1"><small>현대차 내비 · 안내 중</small><b>강릉</b></div><span class="badge">NaviHelper로 받아옴</span><span class="pill">내비 경유지 0/2</span><span class="pill">취향: 자연·풍경, 역사·문화 · 바꾸기</span></div>
+<div class="grid2"><div class="card"><b style="font-size:16px">내비 경로에서 들를 만한 곳</b><div style="margin-top:8px"><div class="row"><span class="num">01</span><div class="t"><b>대관령 양떼목장</b><small>능선 위 목장 풍경 · 경유 +12분</small></div><span class="pill">${I.book} 나중에 보기</span><span class="pill">내비 경유지로</span></div><div class="row"><span class="num">02</span><div class="t"><b>오죽헌</b><small>신사임당과 율곡의 이야기 · 경유 +8분</small></div><span class="pill">${I.book} 나중에 보기</span><span class="pill">내비 경유지로</span></div><div class="row"><span class="num">03</span><div class="t"><b>경포호</b><small>호숫가 산책 · 경유 +5분</small></div><span class="pill">${I.book} 나중에 보기</span><span class="pill">내비 경유지로</span></div></div></div>
+<div class="card" style="display:flex;flex-direction:column;gap:12px"><b style="font-size:16px">다른 길 제안</b><div class="suggest"><div class="t" style="flex:1"><b>풍경 좋은 길로 가 볼까요?</b><br><small>예상 +24분 · 양평 두물머리 경유 · 자연·풍경 취향</small></div><span class="pill">내비에 경유지 추가</span></div><p class="sub" style="font-size:12px;line-height:1.6">길 안내는 현대차 내비가 해요. 다른 길은 내비에 경유지를 추가해서 바꿔요.</p></div></div>`)],
+ [2600,gear('P')+sim+app('여정 탐색',`<div class="navicard"><div class="ic">${I.route}</div><div style="flex:1"><small>현대차 내비 · 안내 중</small><b>강릉</b></div><span class="badge">NaviHelper로 받아옴</span><span class="pill">내비 경유지 0/2</span><span class="pill">취향: 자연·풍경, 역사·문화 · 바꾸기</span></div>
+<div class="grid2"><div class="card"><b style="font-size:16px">내비 경로에서 들를 만한 곳</b><div style="margin-top:8px"><div class="row"><span class="num">01</span><div class="t"><b>대관령 양떼목장</b><small>능선 위 목장 풍경 · 경유 +12분</small></div><span class="pill on">${I.book} 담음</span><span class="pill">내비 경유지로</span></div><div class="row"><span class="num">02</span><div class="t"><b>오죽헌</b><small>신사임당과 율곡의 이야기 · 경유 +8분</small></div><span class="pill">${I.book} 나중에 보기</span><span class="pill">내비 경유지로</span></div><div class="row"><span class="num">03</span><div class="t"><b>경포호</b><small>호숫가 산책 · 경유 +5분</small></div><span class="pill">${I.book} 나중에 보기</span><span class="pill">내비 경유지로</span></div></div></div>
+<div class="card" style="display:flex;flex-direction:column;gap:12px"><b style="font-size:16px">다른 길 제안</b><div class="suggest"><div class="t" style="flex:1"><b>풍경 좋은 길로 가 볼까요?</b><br><small>예상 +24분 · 양평 두물머리 경유 · 자연·풍경 취향</small></div><span class="pill">내비에 경유지 추가</span></div><p class="sub" style="font-size:12px;line-height:1.6">길 안내는 현대차 내비가 해요. 다른 길은 내비에 경유지를 추가해서 바꿔요.</p></div></div>`)+tap(512,250)]]},
+
+{tag:['drive','출발'],title:'⑥ 핸들 버튼이나 음성으로 이야기 시작',text:'출발하면서 핸들 ▶ 버튼을 누르거나 "이야기 들려줘"라고 말하면 재생이 시작돼요. 사용자가 시작할 때만 재생합니다.',frames:[
+ [1800,gear('D')+sim+drive({mini:{playing:false,status:'대기 중',pct:0,time:'00:00 / 03:37'}})],
+ [2000,gear('D')+sim+drive({mini:{playing:false,status:'대기 중',pct:0,time:'00:00 / 03:37'}},`<div class="bubble" style="left:40px;bottom:40px">🎙️ "이야기 들려줘"</div>`)],
+ [2400,gear('D')+sim+drive({mini:{pct:2,time:'00:03 / 03:37'}},`<div class="wheel"><b>▶</b>또는 핸들 ▶ 버튼</div>`)]]},
+
+{tag:['drive','주행 중'],title:'⑦ 화면은 내비, ROADFM은 소리로',text:'주행 중 화면은 내비가 쓰고, ROADFM은 소리로만 함께해요. ROADFM 앱 화면은 주행 중 열리지 않아요.',frames:[
+ [2600,gear('D')+sim+drive({mini:{pct:20,time:'00:43 / 03:37'}})],
+ [2600,gear('D')+sim+drive({mini:{pct:22,time:'00:48 / 03:37'}},`<div class="locked"><div>🔒 주행 중에는 ROADFM 화면을 쓸 수 없어요<small>소리·핸들 버튼·음성으로 이용하고, 화면은 주차(P) 후에 열어요.</small></div></div>`)]]},
+
+{tag:['drive','주행 중'],title:'⑧ 내비 안내가 나오면 잠깐 양보',text:'내비 음성 안내가 나오면 이야기는 잠깐 멈추고 3초 되감았다가, 안내가 끝나면 이어서 들려줘요.',frames:[
+ [2600,gear('D')+sim+drive({navi:{turn:'↱',dist:'300m',road:'오른쪽 · 대관령 IC'},mini:{playing:false,status:'내비 안내 중 · 잠시 멈춤',pct:40,time:'01:27 / 03:37'}},`<div class="bubble bnavi" style="left:380px;top:70px">🧭 "300미터 앞에서 오른쪽입니다"</div>`)],
+ [2400,gear('D')+sim+drive({navi:{turn:'↑',dist:'8km',road:'대관령 방면'},mini:{pct:40,time:'01:24 / 03:37'}},`<div class="toast" style="bottom:150px">안내가 끝나 3초 전부터 이어서 들려줘요.</div>`)]]},
+
+{tag:['drive','주행 중'],title:'⑨ 들을 만한 곳은 귀로 듣고 "담아줘"',text:'지나가는 길에 들를 만한 곳이 있으면 오디오로 알려줘요. "나중에 보기에 담아줘"라고 말하면 주차 후에 볼 수 있게 저장돼요.',frames:[
+ [2800,gear('D')+sim+drive({mini:{status:'추천 안내',pct:62,time:'02:15 / 03:37'}},`<div class="reco"><small>🔊 ROADFM 오디오 추천</small>"곧 지나는 길에 대관령 박물관이 있어요. 영동 지역의 생활 문화를 만날 수 있어요."</div>`)],
+ [2200,gear('D')+sim+drive({mini:{status:'추천 안내',pct:63,time:'02:17 / 03:37'}},`<div class="reco"><small>🔊 ROADFM 오디오 추천</small>"곧 지나는 길에 대관령 박물관이 있어요. 영동 지역의 생활 문화를 만날 수 있어요."</div><div class="bubble" style="left:40px;bottom:40px">🎙️ "나중에 보기에 담아줘"</div>`)],
+ [2000,gear('D')+sim+drive({mini:{pct:64,time:'02:19 / 03:37'}},`<div class="toast" style="bottom:150px">🔖 '대관령박물관'을 나중에 보기에 담았어요.</div>`)]]},
+
+{tag:['drive','주행 중'],title:'⑩ 이야기가 끝나면',text:'"이어서 듣기"를 켰다면 다음 지역 이야기가 이어지고, 꺼져 있으면 그대로 멈춰요. 멈춘 뒤에는 위치가 바뀌어도 혼자 시작하지 않아요.',frames:[
+ [2400,gear('D')+sim+drive({mini:{pct:100,time:'03:37 / 03:37'}})],
+ [2800,gear('D')+sim+drive({navi:{dist:'34km',road:'강릉 방면',left:'41분'},mini:{coffee:true,region:'강릉',title:'강릉 커피가 특별한 이유',pct:3,time:'00:08 / 04:25'}},`<div class="toast" style="bottom:150px">🎧 이어서 듣기 · 다음 지역 이야기</div>`)]]},
+
+{tag:['rest','휴게소 · 주차'],title:'⑪ 주차하면 ROADFM 화면에서 확인',text:'휴게소에 주차한 뒤 ROADFM을 열면 담아 둔 장소를 볼 수 있어요. 가 보고 싶으면 내비 경유지로 보내요.',frames:[
+ [2600,gear('P')+sim+app('이야기',`<h1 class="h1">나중에 보기</h1><p class="sub">주행 중에 담아 둔 장소예요</p><div class="card"><div class="row"><span class="num">${I.pin}</span><div class="t"><b>대관령 양떼목장</b><small>출발 전에 담음 · 경유 +12분</small></div><span class="pill">장소 보기</span><span class="pill">내비 경유지로</span></div><div class="row"><span class="num">${I.pin}</span><div class="t"><b>대관령박물관</b><small>주행 중 "담아줘" · 경유 +6분</small></div><span class="pill">장소 보기</span><span class="pill">내비 경유지로</span></div></div>`,'10:31')],
+ [2600,gear('P')+sim+app('이야기',`<h1 class="h1">나중에 보기</h1><p class="sub">주행 중에 담아 둔 장소예요</p><div class="card"><div class="row"><span class="num">${I.pin}</span><div class="t"><b>대관령 양떼목장</b><small>출발 전에 담음 · 경유 +12분</small></div><span class="pill">장소 보기</span><span class="pill on">경유지 요청됨</span></div><div class="row"><span class="num">${I.pin}</span><div class="t"><b>대관령박물관</b><small>주행 중 "담아줘" · 경유 +6분</small></div><span class="pill">장소 보기</span><span class="pill">내비 경유지로</span></div></div>`,'10:31')+tap(1135,226)+`<div class="toast">🧭 현대차 내비에 '대관령 양떼목장' 경유지 추가를 요청했어요 · 경유지 1/2</div>`]]},
+
+{tag:['rest','도착 · 자동 기록'],title:'⑫ 머문 곳은 여정 기록으로',text:'방문 자동 기록에 동의했다면, 들른 곳에 머물렀을 때 방문으로 추정해 기록 후보로 보여줘요. 남길지는 사용자가 정해요.',frames:[
+ [2600,gear('P')+sim+app('여정 기록',`<h1 class="h1">방문을 기록할까요?</h1><div class="card" style="max-width:720px;display:flex;align-items:center;gap:16px"><span class="num">${I.pin}</span><div class="t" style="flex:1"><b style="font-size:20px">대관령 양떼목장</b><small style="font-size:13px;color:#9a9f9b">25분 머물렀어요 · 방문 추정</small></div><button class="btn">기록에 남기기</button><button class="btn sec">아니에요</button></div>`,'11:20')+tap(828,214)],
+ [2600,gear('P')+sim+app('여정 기록',`<h1 class="h1">여정 기록</h1><div class="grid2"><div class="card"><b style="font-size:16px">방문한 장소</b><div class="row"><span class="num">R1</span><div class="t"><b>대관령 양떼목장</b><small>2026.11.14 · 강원 숲길 힐링</small></div></div></div><div class="card"><b style="font-size:16px">스탬프 · 강원 숲길 힐링</b><p style="font-size:44px;font-weight:800;margin:14px 0 6px;color:#a3c585">2 / 4</p><small style="color:#9a9f9b">들은 이야기와 방문을 모아 스탬프를 채워요</small></div></div>`,'11:21')]]},
+
+{tag:['','정리'],title:'사용자가 하는 일은 딱 이것',text:'처음 한 번 취향을 고르고, 여행 때마다 내비에 목적지를 넣고 "이야기 들려줘". 나머지는 ROADFM이 맞춰 줘요.',frames:[[6500,`<div class="title"><div class="k">정리</div><h1 style="font-size:50px">내비는 길을, ROADFM은 이야기를.</h1><div class="sum"><div><b>처음 한 번 · ROADFM</b><span>취향 선택<br>이어서 듣기 · 기록 동의(선택)</span></div><div><b>여행마다 · 내비 + 핸들/음성</b><span>현대차 내비에 목적지<br>"이야기 들려줘" 또는 ▶</span></div><div><b>주차했을 때 · ROADFM</b><span>나중에 보기 · 경유지<br>여정 기록 · 스탬프</span></div></div></div>${sim}`]]},
+];
+
+/* ---------- 재생기 ---------- */
+const stage=document.getElementById('stage');
+const total=scenes.length;
+let si=0,fi=0,timer=null,playing=true,frameStart=0,frameDur=0,raf=0;
+const sceneDur=s=>s.frames.reduce((a,f)=>a+f[0],0);
+function show(){
+  const sc=scenes[si],[dur,html]=sc.frames[fi];
+  const el=document.createElement('div');el.className='scene';el.innerHTML=html;stage.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('on'));
+  [...stage.children].slice(0,-1).forEach(o=>{o.classList.remove('on');setTimeout(()=>o.remove(),500)});
+  const t=document.getElementById('tag');t.className='tag '+(sc.tag[0]||'');t.textContent=sc.tag[1];
+  document.getElementById('stepno').textContent=`${si+1} / ${total}`;
+  document.getElementById('capTitle').textContent=sc.title;document.getElementById('capText').textContent=sc.text;
+  frameStart=performance.now();frameDur=dur;schedule();
+}
+function schedule(){clearTimeout(timer);if(!playing)return;const left=Math.max(0,frameDur-(performance.now()-frameStart));timer=setTimeout(advance,left)}
+function advance(){const sc=scenes[si];if(fi<sc.frames.length-1){fi++}else if(si<total-1){si++;fi=0}else{playing=false;updPlay();return}show()}
+function go(i){si=Math.max(0,Math.min(total-1,i));fi=0;show()}
+function tick(){const sc=scenes[si];const done=sc.frames.slice(0,fi).reduce((a,f)=>a+f[0],0)+Math.min(frameDur,playing?performance.now()-frameStart:pausedAt);document.getElementById('bar').style.width=((si+done/sceneDur(sc))/total*100)+'%';raf=requestAnimationFrame(tick)}
+let pausedAt=0;
+function updPlay(){document.getElementById('play').textContent=playing?'❚❚ 일시정지':'▶ 재생'}
+function toggle(){if(playing){pausedAt=performance.now()-frameStart;playing=false;clearTimeout(timer)}else{playing=true;frameStart=performance.now()-pausedAt;schedule()}updPlay()}
+document.getElementById('play').onclick=toggle;
+document.getElementById('prev').onclick=()=>go(si-1);
+document.getElementById('next').onclick=()=>go(si+1);
+document.getElementById('restart').onclick=()=>{playing=true;updPlay();go(0)};
+addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();toggle()}if(e.key==='ArrowRight')go(si+1);if(e.key==='ArrowLeft')go(si-1)});
+function fit(){const k=Math.min(innerWidth/1300,innerHeight/900);document.documentElement.style.setProperty('--k',k.toFixed(4))}
+addEventListener('resize',fit);fit();
+const q=new URLSearchParams(location.search);
+if(q.has('scene')){si=Math.min(total-1,Math.max(0,+q.get('scene')-1));fi=Math.min(scenes[si].frames.length-1,+(q.get('frame')||1)-1);if(q.has('still')){playing=false;updPlay();document.body.classList.add('still')}}
+show();tick();
+})();
+</script>
+</body>
+</html>

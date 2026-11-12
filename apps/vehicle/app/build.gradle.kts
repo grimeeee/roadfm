@@ -45,7 +45,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.9.3")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
 
-    // TODO: Pleos Connect SDK (NaviHelper 등) — Playground 승인 후 추가
+    // Pleos Connect SDK — NaviHelper (내비 목적지·경유지 연동)
+    implementation("ai.pleos.playground:NaviHelper:3.0.5")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     testImplementation("junit:junit:4.13.2")

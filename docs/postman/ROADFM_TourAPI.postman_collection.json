@@ -1,0 +1,207 @@
+{
+  "info": {
+    "name": "ROADFM - 한국관광공사 API",
+    "description": "TourAPI(KorService2) 정보형 + 오디(Odii) 이야기형 조회 테스트.\n\n사용법: 환경(ROADFM_TourAPI 환경)에서 serviceKey 를 채우고 1번부터 순서대로 Send.\n1번/4번 응답의 첫 항목 ID가 다음 요청에 자동으로 들어간다.\n\n⚠️ serviceKey 를 이 파일에 직접 넣어서 커밋하지 말 것.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://apis.data.go.kr/B551011" },
+    { "key": "mapX", "value": "128.8784" },
+    { "key": "mapY", "value": "37.7792" },
+    { "key": "radius", "value": "5000" },
+    { "key": "contentId", "value": "" },
+    { "key": "contentTypeId", "value": "12" },
+    { "key": "tid", "value": "" },
+    { "key": "tlid", "value": "" }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// 공통: 응답 상태 확인",
+          "let j; try { j = pm.response.json(); } catch (e) { console.log('JSON 아님(인증/주소 오류일 가능성):', pm.response.text()); return; }",
+          "const header = j && j.response && j.response.header;",
+          "pm.test('resultCode 0000', () => pm.expect(header && header.resultCode).to.eql('0000'));",
+          "if (header && header.resultCode !== '0000') console.log('오류:', header.resultMsg);"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "정보형 (TourAPI KorService2)",
+      "item": [
+        {
+          "name": "1. 위치기반 관광지 목록",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const items = pm.response.json()?.response?.body?.items?.item;",
+                  "const first = Array.isArray(items) ? items[0] : items;",
+                  "if (first) {",
+                  "  pm.collectionVariables.set('contentId', first.contentid);",
+                  "  pm.collectionVariables.set('contentTypeId', first.contenttypeid);",
+                  "  console.log('다음 요청에 사용:', first.title, first.contentid);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/KorService2/locationBasedList2?serviceKey={{serviceKey}}&MobileOS=ETC&MobileApp=ROADFM&_type=json&mapX={{mapX}}&mapY={{mapY}}&radius={{radius}}&contentTypeId=12&arrange=E&numOfRows=10&pageNo=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["KorService2", "locationBasedList2"],
+              "query": [
+                { "key": "serviceKey", "value": "{{serviceKey}}" },
+                { "key": "MobileOS", "value": "ETC" },
+                { "key": "MobileApp", "value": "ROADFM" },
+                { "key": "_type", "value": "json" },
+                { "key": "mapX", "value": "{{mapX}}", "description": "경도(WGS84)" },
+                { "key": "mapY", "value": "{{mapY}}", "description": "위도(WGS84)" },
+                { "key": "radius", "value": "{{radius}}", "description": "미터, 최대 20000" },
+                { "key": "contentTypeId", "value": "12", "description": "12 관광지 / 14 문화시설 / 39 음식점" },
+                { "key": "arrange", "value": "E", "description": "E = 거리순" },
+                { "key": "numOfRows", "value": "10" },
+                { "key": "pageNo", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. 공통정보 (개요·주소·이미지)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/KorService2/detailCommon2?serviceKey={{serviceKey}}&MobileOS=ETC&MobileApp=ROADFM&_type=json&contentId={{contentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["KorService2", "detailCommon2"],
+              "query": [
+                { "key": "serviceKey", "value": "{{serviceKey}}" },
+                { "key": "MobileOS", "value": "ETC" },
+                { "key": "MobileApp", "value": "ROADFM" },
+                { "key": "_type", "value": "json" },
+                { "key": "contentId", "value": "{{contentId}}", "description": "1번 응답에서 자동 설정" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. 소개정보 (운영시간·휴무·주차)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/KorService2/detailIntro2?serviceKey={{serviceKey}}&MobileOS=ETC&MobileApp=ROADFM&_type=json&contentId={{contentId}}&contentTypeId={{contentTypeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["KorService2", "detailIntro2"],
+              "query": [
+                { "key": "serviceKey", "value": "{{serviceKey}}" },
+                { "key": "MobileOS", "value": "ETC" },
+                { "key": "MobileApp", "value": "ROADFM" },
+                { "key": "_type", "value": "json" },
+                { "key": "contentId", "value": "{{contentId}}" },
+                { "key": "contentTypeId", "value": "{{contentTypeId}}" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "이야기형 (오디 Odii)",
+      "item": [
+        {
+          "name": "4. 위치기반 관광지 목록 (theme)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const items = pm.response.json()?.response?.body?.items?.item;",
+                  "const first = Array.isArray(items) ? items[0] : items;",
+                  "if (first) {",
+                  "  pm.collectionVariables.set('tid', first.tid);",
+                  "  pm.collectionVariables.set('tlid', first.tlid);",
+                  "  console.log('다음 요청에 사용:', first.title, first.tid, first.tlid);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Odii/themeLocationBasedList?serviceKey={{serviceKey}}&MobileOS=ETC&MobileApp=ROADFM&_type=json&langCode=ko&mapX={{mapX}}&mapY={{mapY}}&radius={{radius}}&numOfRows=10&pageNo=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["Odii", "themeLocationBasedList"],
+              "query": [
+                { "key": "serviceKey", "value": "{{serviceKey}}" },
+                { "key": "MobileOS", "value": "ETC" },
+                { "key": "MobileApp", "value": "ROADFM" },
+                { "key": "_type", "value": "json" },
+                { "key": "langCode", "value": "ko" },
+                { "key": "mapX", "value": "{{mapX}}" },
+                { "key": "mapY", "value": "{{mapY}}" },
+                { "key": "radius", "value": "{{radius}}" },
+                { "key": "numOfRows", "value": "10" },
+                { "key": "pageNo", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. 관광지별 이야기 (story)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Odii/storyBasedList?serviceKey={{serviceKey}}&MobileOS=ETC&MobileApp=ROADFM&_type=json&langCode=ko&tid={{tid}}&tlid={{tlid}}&numOfRows=10&pageNo=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["Odii", "storyBasedList"],
+              "query": [
+                { "key": "serviceKey", "value": "{{serviceKey}}" },
+                { "key": "MobileOS", "value": "ETC" },
+                { "key": "MobileApp", "value": "ROADFM" },
+                { "key": "_type", "value": "json" },
+                { "key": "langCode", "value": "ko" },
+                { "key": "tid", "value": "{{tid}}", "description": "4번 응답에서 자동 설정" },
+                { "key": "tlid", "value": "{{tlid}}", "description": "4번 응답에서 자동 설정" },
+                { "key": "numOfRows", "value": "10" },
+                { "key": "pageNo", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "6. 위치기반 이야기 (story)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Odii/storyLocationBasedList?serviceKey={{serviceKey}}&MobileOS=ETC&MobileApp=ROADFM&_type=json&langCode=ko&mapX={{mapX}}&mapY={{mapY}}&radius={{radius}}&numOfRows=10&pageNo=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["Odii", "storyLocationBasedList"],
+              "query": [
+                { "key": "serviceKey", "value": "{{serviceKey}}" },
+                { "key": "MobileOS", "value": "ETC" },
+                { "key": "MobileApp", "value": "ROADFM" },
+                { "key": "_type", "value": "json" },
+                { "key": "langCode", "value": "ko" },
+                { "key": "mapX", "value": "{{mapX}}" },
+                { "key": "mapY", "value": "{{mapY}}" },
+                { "key": "radius", "value": "{{radius}}" },
+                { "key": "numOfRows", "value": "10" },
+                { "key": "pageNo", "value": "1" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROADFM | 길 위의 이야기를 듣다</title>
+<meta name="description" content="ROADFM 위치 기반 오디오 여행 채널 인터랙티브 프로토타입 — 주행 중엔 귀로, 주차 중엔 눈으로">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+<!-- Icon library -->
+<svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><defs>
+<symbol id="ic-logo" viewBox="0 0 32 32"><path d="M3 17c6-13 9 13 15-2 3-8 6-9 11-2M3 22h26"/></symbol>
+<symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-8h6v8"/></symbol>
+<symbol id="ic-route" viewBox="0 0 24 24"><path d="M6 19c2-7 12-3 12-11"/><circle cx="6" cy="19" r="2"/><path d="M18 3a3 3 0 0 0-3 3c0 2 3 5 3 5s3-3 3-5a3 3 0 0 0-3-3Z"/></symbol>
+<symbol id="ic-discover" viewBox="0 0 32 32"><path d="M4 8 13 4l9 4 6-3v17l-6 3-9-4-9 4Z"/><path d="M13 4v17m9-13v13"/><circle cx="22" cy="20" r="5" fill="var(--bg,#171a18)"/><path d="m26 24 4 4"/></symbol>
+<symbol id="ic-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="8" rx="2"/><rect x="17" y="13" width="4" height="8" rx="2"/></symbol>
+<symbol id="ic-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"/></symbol>
+<symbol id="ic-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13a7.6 7.6 0 0 0 0-2l2-1-2-4-2 1a9 9 0 0 0-2-1l-1-3h-4L9 6a9 9 0 0 0-2 1L5 6l-2 4 2 1a7.6 7.6 0 0 0 0 2l-2 1 2 4 2-1a9 9 0 0 0 2 1l1 3h4l1-3a9 9 0 0 0 2-1l2 1 2-4Z"/></symbol>
+<symbol id="ic-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-7-7 7 7-7 7"/></symbol>
+<symbol id="ic-close" viewBox="0 0 24 24"><path d="M5 5 19 19M19 5 5 19"/></symbol>
+<symbol id="ic-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8Z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="ic-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3"/></symbol>
+<symbol id="ic-next" viewBox="0 0 24 24"><path d="m4 5 10 7-10 7Zm12 0v14"/></symbol>
+<symbol id="ic-prev" viewBox="0 0 24 24"><path d="m20 5-10 7 10 7ZM8 5v14"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+<symbol id="ic-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+<symbol id="ic-volume" viewBox="0 0 24 24"><path d="M3 9h5l6-5v16l-6-5H3Z"/><path d="M18 8q5 4 0 8"/></symbol>
+<symbol id="ic-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7v.5"/></symbol>
+<symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+</defs></svg>
+<div class="demo-caption"><span>ROADFM  /  INTERACTIVE VEHICLE APP</span><span>DESIGN CONCEPT · 01</span></div>
+<div class="stage"><div class="shell" id="app">
+<aside class="side" aria-label="메뉴">
+<div class="brand-mark"><svg class="svgicon"><use href="#ic-logo"/></svg></div>
+<button class="navitem active" data-page="plan"><svg class="svgicon"><use href="#ic-discover"/></svg><span>여정 탐색</span></button>
+<button class="navitem" data-page="audio"><svg class="svgicon"><use href="#ic-headphones"/></svg><span>이야기</span></button>
+<button class="navitem" data-page="records"><svg class="svgicon"><use href="#ic-bookmark"/></svg><span>여정 기록</span></button>
+<button class="navitem" data-page="settings"><svg class="svgicon"><use href="#ic-settings"/></svg><span>설정</span></button>
+<!-- <div class="side-bottom">ROADFM<br>2026</div> -->
+</aside>
+<div class="main">
+<header class="topbar"><div class="identity"><div class="wordmark">ROADFM<span style="color:#a3c585">.</span></div>
+    <div class="separator"></div><div class="top-right">
+       <div class="rfm-gear" role="group" aria-label="시연용 차량 상태"><span>시연 · 차량 상태</span><button data-gear="P" aria-pressed="true">P 주차</button><button data-gear="D" aria-pressed="false">D 주행</button></div>
+       <time id="clock" class="clock">2026-11-04 10:24</time></div></header>
+<div class="page">
+<section id="page-plan" class="view active" data-stage="onboard">
+<div class="stage-onboard"><div class="rfm-onboard">
+<p class="step-label">처음 오셨네요</p><h1 class="rfm-onboard-title">어떤 여행을 좋아하세요?</h1>
+<p class="rfm-navi-note">한 번만 고르면 돼요. 고른 취향으로 길 위의 이야기와 들를 곳을 골라 드려요. 여러 개 골라도 되고, 나중에 설정에서 바꿀 수 있어요.</p>
+<div id="onboard-list" class="rfm-onboard-list"></div>
+<div class="rfm-onboard-actions"><button class="btn secondary" id="onboard-skip">나중에 고를게요</button><button class="btn go" id="onboard-done">이대로 시작하기 <svg class="svgicon"><use href="#ic-arrow"/></svg></button></div>
+</div></div>
+<div class="stage-dest">
+<div class="page-head"><h1 class="page-title">오늘은 어디로 떠날까요?</h1></div>
+<div class="destination-grid">
+<div class="destination-box"><p class="step-label">현대차 내비 연동</p><h2 class="sub-title" id="navi-title">내비에서 목적지를 설정해 주세요</h2>
+<p class="rfm-navi-note">길 안내는 <b>현대차 내비</b>가 해요. ROADFM은 내비에 설정된 목적지를 받아 그 길의 이야기를 준비해요.</p>
+<div class="rfm-navi-card" id="navi-card" aria-live="polite"></div>
+<p class="rfm-sim-label">시연용 · 현대차 내비에서 목적지를 설정했다고 가정하기</p>
+<div id="destination-results" class="rfm-navi-sim"></div></div>
+<div class="destination-box journey-summary" id="journey-summary"><svg class="journey-art" viewBox="0 0 300 360" preserveAspectRatio="xMaxYMid meet" aria-hidden="true"><path class="contour" d="M0 250C60 230 90 270 150 250S250 200 300 220"/><path class="contour" d="M0 290C70 270 110 310 170 290S260 250 300 270"/><path class="contour" d="M0 170C50 150 100 190 160 160S260 110 300 130"/><path class="contour" d="M0 110C70 90 120 130 180 100S260 60 300 80"/><path class="road" d="M28 310C92 310 96 240 150 222S214 196 206 146 232 84 258 62"/><path class="road-dash" d="M28 310C92 310 96 240 150 222S214 196 206 146 232 84 258 62"/><path class="road-live" pathLength="1" d="M28 310C92 310 96 240 150 222S214 196 206 146 232 84 258 62"/><circle class="node-start" cx="28" cy="310" r="9"/><circle class="node-end" cx="258" cy="62" r="9"/></svg>
+  <p class="step-label">오늘의 여정</p><div class="journey-stop"><small>출발지</small><strong>현재 위치 (서울)</strong></div><div class="journey-stop"><small>내비 목적지</small><strong id="destination-selection">내비 목적지 없음</strong><p class="setup-note" id="destination-address" style="margin-top:8px"></p></div><p class="rfm-navi-note" style="margin:0">내비에서 목적지를 정하면 ROADFM이 자동으로 받아와 이야기를 준비해요.</p></div>
+</div></div>
+<div class="stage-choose">
+<div class="rfm-choose">
+<div class="rfm-choose-head"><div class="rfm-navi-card" id="choose-navi"></div><span class="rfm-wp-slots" id="wp-slots"></span><button class="rfm-pref-pill" id="pref-change">취향 · <span id="pref-summary"></span> · 바꾸기</button></div>
+<div class="rfm-choose-grid">
+<div class="step"><div class="step-head">내비 경로에서 들를 만한 곳</div><p class="rfm-route-note" id="route-basis"></p><div id="recommendation-list"></div></div>
+<div class="step"><div class="step-head">다른 길 제안</div><p class="rfm-route-note">길 안내는 현대차 내비가 해요. 다른 길로 가려면 내비에 <b>경유지를 추가</b>해서 경로를 바꿔요. 시간은 모두 <b>예상</b>이에요.</p><div id="route-suggest" class="rfm-suggest-list"></div></div>
+</div>
+</div>
+<div class="cta-bar"><div><strong id="cta-summary"></strong></div><div class="cta-actions"><button class="btn secondary go" id="btn-change-dest">내비 목적지 다시 확인</button><button class="btn go" id="start-journey">이 길의 이야기 보기 <svg class="svgicon"><use href="#ic-arrow"/></svg></button></div></div>
+</div></section>
+<section id="page-audio" class="view"><div class="rfm-audio">
+<div class="rfm-now">
+<div class="rfm-art" id="now-art" aria-hidden="true"></div>
+<div class="rfm-now-body">
+<span class="rfm-status" id="audio-status">이야기 · 대기 중</span>
+<h2 class="rfm-now-title" id="now-title"></h2>
+<p class="rfm-now-desc" id="now-desc"></p>
+<div class="rfm-progress"><div class="rfm-bar"><i id="now-bar"></i></div><div class="rfm-times"><span id="now-elapsed">00:00</span><span id="now-duration">00:00</span></div></div>
+<div class="rfm-controls"><button class="rfm-ctl" id="audio-prev" aria-label="이전 이야기"><svg class="svgicon"><use href="#ic-prev"/></svg></button><button class="rfm-ctl rfm-play" id="audio-toggle" aria-label="이야기 듣기"><svg class="svgicon"><use href="#ic-play"/></svg></button><button class="rfm-ctl" id="audio-next" aria-label="다음 이야기"><svg class="svgicon"><use href="#ic-next"/></svg></button><span class="rfm-play-label" id="audio-toggle-label">이야기 듣기</span></div>
+<p class="rfm-hint"><svg class="svgicon"><use href="#ic-info"/></svg><span>직접 시작할 때만 재생해요. 주행 중에는 차량 미디어 화면 · 핸들 버튼 · 음성으로 조작해요.</span></p>
+</div>
+</div>
+<div class="rfm-side">
+<div class="rfm-panel"><div class="rfm-panel-head"><strong>이 길의 이야기</strong><span id="story-route"></span></div><div id="story-list" class="rfm-list"></div></div>
+<div class="rfm-panel"><div class="rfm-panel-head"><strong>나중에 보기</strong><span id="saved-count">0곳</span></div><div id="saved-list" class="rfm-list"></div></div>
+</div>
+</div></section>
+<section id="page-records" class="view"><div class="tabs" role="tablist" data-active="log"><button class="tab" role="tab" data-tab="log" aria-selected="true">여정 기록</button><button class="tab" role="tab" data-tab="stamp" aria-selected="false">스탬프</button></div>
+<div id="tab-log"><div class="record-stats"><div class="record-stat">
+    <span>여정 기록</span><b>1<span style="font-size:16px;color:#9a9f9b;margin-left:5px">곳</span></b></div><div class="record-stat"><span>스탬프</span><b id="record-stamps">0<span style="font-size:16px;color:#9a9f9b;margin-left:5px">개</span></b></div></div><div class="timeline"><div class="eyebrow">YOUR JOURNEY ARCHIVE</div><h2 class="sub-title" style="margin:8px 0 10px">방문한 장소</h2><div class="record-row sample-record"><span class="stamp">R01</span><div><strong>강릉</strong><span>강원 숲길 힐링 · 2026.11.11</span></div></div><div class="record-empty-example"><div class="eyebrow">목적지에 도착하지 않은 경우</div><div id="record-list" class="empty" aria-live="polite"><svg class="svgicon"><use href="#ic-bookmark"/></svg><br>아직 기록된 방문지가 없어요</div></div></div></div>
+<div id="tab-stamp" class="hide"><div id="stamp-list" class="stamp-grid" aria-live="polite"></div></div>
+</section>
+<section id="page-settings" class="view"><div class="page-head"><div><div class="eyebrow">MAKE IT YOURS</div><h1 class="page-title">나에게 맞는 여행 방식.</h1><p class="desc">좋아하는 것을 기억하고, 직접 시작할 때만 이야기를 들려줘요.</p></div></div><div class="settings-grid"><div class="settings-box"><div class="eyebrow">PREFERENCE</div><h2 class="sub-title" style="margin-top:9px">관심 있는 여행 테마</h2><p class="desc" style="margin-top:8px">여러 개 고를 수 있어요. 들를 곳 추천과 다른 길 제안에 반영돼요.</p><div class="choice-list" id="settings-preferences"></div><div style="margin-top:28px;border-top:1px solid #2a2d2b;padding-top:20px"><div class="eyebrow">YOUR PRIVACY</div><p class="desc" style="margin-top:10px">방문 기록은 동의한 경우에만 남기며, 이 시연에서는 브라우저 안에서만 유지돼요.</p></div></div><div class="settings-box"><div class="eyebrow">GUIDE SETTINGS</div><h2 class="sub-title" style="margin-top:9px">이용 환경 설정</h2><div class="switch-line"><div><strong>방문 자동 기록</strong><p>들른 장소에 머물면 여정 기록 후보로 남겨요. 위치 기록에 동의해야 하고, 기본은 꺼져 있어요.</p></div><input class="toggle" type="checkbox" id="setting-auto-record" aria-label="방문 자동 기록"></div>
+  <div class="switch-line"><div><strong>이어서 듣기</strong><p>듣고 있을 때만, 이야기가 끝나면 다음 지역 이야기를 이어서 들려줘요. 멈춘 뒤에는 혼자 시작하지 않아요.</p></div><input class="toggle" type="checkbox" id="setting-continuous" aria-label="이어서 듣기"></div></div></div></section>
+</div>
+<footer class="shell-footer"><span>ROADFM &nbsp;·&nbsp; 주행 중엔 귀로, 주차 중엔 눈으로</span><span class="footer-right">UX PROTOTYPE / SIMULATION &nbsp; / &nbsp; 실제 내비·GPS·AI·차량 연결 전</span></footer>
+</div>
+<div class="rfm-drive" id="drive" aria-hidden="true">
+<div class="rfm-navi-bg" aria-hidden="true"><div class="rfm-navi-grid"></div>
+<svg class="rfm-navi-road" viewBox="0 0 1262 640" preserveAspectRatio="none"><path d="M560 660 C 600 520, 520 430, 640 340 S 820 230, 900 90" fill="none" stroke="#0b121b" stroke-width="40"/><path d="M560 660 C 600 520, 520 430, 640 340 S 820 230, 900 90" fill="none" stroke="#4aa3ff" stroke-width="14" stroke-linecap="round"/><circle cx="588" cy="540" r="16" fill="#fff" stroke="#1e6fd9" stroke-width="6"/></svg>
+<div class="rfm-navi-label"><b>현대차 내비</b><span id="drive-navi-state">길 안내 중</span></div></div>
+<div class="rfm-navi-brand">현대차 내비 · 자리표시(실제 화면 아님)</div>
+<div class="rfm-tbt"><div class="rfm-tbt-arrow" id="tbt-arrow">↑</div><div><b id="tbt-dist">12km</b><span id="tbt-road">영동고속도로 · 강릉 방면</span></div></div>
+<div class="rfm-eta" id="drive-eta"></div>
+<div class="rfm-drive-gear"><span class="rfm-badge">주행 중</span><div class="rfm-gear" role="group" aria-label="시연용 차량 상태"><span>시연 · 차량 상태</span><button data-gear="P" aria-pressed="false">P 주차</button><button data-gear="D" aria-pressed="true">D 주행</button></div></div>
+<div class="rfm-navi-voice hide" id="navi-voice">🧭 "300미터 앞에서 오른쪽입니다"</div>
+<div class="rfm-reco hide" id="drive-reco"><div><small>🔊 ROADFM 오디오 추천</small><p id="drive-reco-text"></p></div><button class="rfm-chip rfm-voice" id="sim-save">🎙️ "나중에 보기에 담아줘"</button></div>
+<div class="rfm-mini"><span class="rfm-mini-label">ROADFM · 시스템 미디어 영역</span>
+<div class="rfm-art rfm-mini-art" id="drive-art" aria-hidden="true"></div>
+<div class="rfm-mini-info"><small>ROADFM · <span id="drive-status">대기 중</span></small><b id="drive-title"></b><span id="drive-region"></span>
+<div class="rfm-progress"><div class="rfm-bar"><i id="drive-bar"></i></div><div class="rfm-times"><span id="drive-elapsed">00:00</span><span id="drive-duration">00:00</span></div></div>
+<div class="rfm-controls rfm-mini-controls"><button class="rfm-ctl" id="drive-prev" aria-label="이전 이야기"><svg class="svgicon"><use href="#ic-prev"/></svg></button><button class="rfm-ctl rfm-play" id="drive-toggle" aria-label="재생"><svg class="svgicon"><use href="#ic-play"/></svg></button><button class="rfm-ctl" id="drive-next" aria-label="다음 이야기"><svg class="svgicon"><use href="#ic-next"/></svg></button></div></div>
+</div>
+<div class="rfm-drive-foot">
+<p>🔒 ROADFM 앱 화면은 주행 중 열리지 않아요 · 소리·핸들·음성으로 이용</p>
+<div class="rfm-sim"><span>차량 입력 시뮬레이션</span><button class="rfm-chip" id="sim-wheel">🎡 핸들 버튼 ▶︎/❚❚</button><button class="rfm-chip rfm-voice" id="sim-voice">🎙️ "강릉 이야기 틀어줘"</button><button class="rfm-chip" id="sim-navi">🧭 내비 안내 나옴</button><button class="rfm-chip" id="sim-reco">🔊 오디오 추천 듣기</button></div>
+</div>
+</div>
+<div class="backdrop" id="overlay"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><div id="dialog-content"></div></div></div>
+<button class="ratio-toggle" id="ratio-toggle" aria-label="화면 비율 전환">16:9</button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div></div>
+<script>
+(() => {
+'use strict';
+const root=document.getElementById('app');
+const icon=name=>`<svg class="svgicon" aria-hidden="true"><use href="#ic-${name}"/></svg>`;
+const routes=[{title:'빠른 길',tag:'추천',time:'2시간 45분',desc:'이동 시간 최소화 · 영동고속도로 중심',coord:[390,224],places:{nature:[['대관령 양떼목장','능선 위 목장 풍경과 탁 트인 하늘','약 35분 둘러보기',[510,142]],['경포호','호숫가를 따라 걷는 잠깐의 산책','약 25분 둘러보기',[626,104]],['강릉솔향수목원','소나무 향이 머무는 산책로','약 30분 둘러보기',[603,123]]],food:[['횡성 한우거리','강원도로 향하는 길의 든든한 한 끼','식사 약 50분',[421,205]],['봉평 메밀음식 거리','메밀향이 남은 지역의 오래된 맛','식사 약 45분',[506,165]],['안목 커피거리','바다를 보며 마시는 커피 한 잔','휴식 약 30분',[656,98]]],culture:[['오죽헌','신사임당과 율곡 이이의 이야기를 담은 공간','관람 약 50분',[628,107]],['대관령박물관','영동 지역의 생활 문화를 만나는 곳','관람 약 40분',[592,126]],['강릉 선교장','고즈넉한 한옥과 오랜 삶의 흔적','관람 약 45분',[636,105]]]}},{title:'풍경 좋은 길',tag:'풍경',time:'3시간 09분',desc:'양평과 홍천의 풍경을 지나가는 길',coord:[282,236],places:{nature:[['양평 두물머리','두 물길이 만나는 고요한 풍경','산책 약 30분',[285,233]],['홍천 수타사','숲길과 고찰을 함께 걷는 시간','산책 약 40분',[421,201]],['대관령 전망 포인트','능선과 하늘을 마주하는 휴식','휴식 약 20분',[575,134]]],food:[['양평 로컬 카페','강을 바라보며 쉬어 가는 자리','휴식 약 30분',[280,237]],['홍천 향토음식 거리','산골 지역의 정겨운 밥상','식사 약 50분',[421,201]],['안목 커피거리','바다를 보며 마시는 커피 한 잔','휴식 약 30분',[656,98]]],culture:[['홍천 수타사','오래된 사찰과 숲이 만나는 장소','관람 약 45분',[421,201]],['양평 문화 공간','지역 예술가의 작업을 만나는 공간','관람 약 35분',[283,241]],['오죽헌','강릉에 담긴 역사적 이야기','관람 약 50분',[628,107]]]}},{title:'문화가 깃든 길',tag:'여유',time:'3시간 26분',desc:'원주와 횡성의 생활과 문화를 만나는 길',coord:[359,302],places:{nature:[['치악산 둘레길','숲길에서 잠깐 속도를 늦추는 시간','산책 약 30분',[354,299]],['횡성 숲체원','나무 사이로 이어지는 초록빛 쉼터','휴식 약 40분',[445,286]],['경포호','물가에 남는 차분한 산책의 기억','산책 약 25분',[626,104]]],food:[['원주 중앙시장','시장 골목에서 만나는 로컬 한 끼','식사 약 45분',[356,303]],['횡성 한우거리','지역의 풍성한 식문화','식사 약 50분',[453,267]],['초당 순두부마을','강릉의 부드럽고 담백한 식사','식사 약 40분',[628,112]]],culture:[['뮤지엄 SAN','자연과 건축이 어우러진 전시 공간','관람 약 70분',[334,311]],['원주 역사박물관','원주의 시간을 천천히 들여다보는 곳','관람 약 40분',[367,298]],['강릉 선교장','옛집에 남아 있는 삶의 이야기','관람 약 45분',[636,105]]]} }];
+const trackData=[{id:'story-001',title:'대관령을 넘는 사람들',region:'평창 · 대관령',desc:'높은 고개를 따라 이어져 온 길과 삶의 장면들을 전해드려요.',duration:217,category:'역사',hue:['#3d5a45','#1f2d24']},{id:'story-002',title:'강릉 커피가 특별한 이유',region:'강릉 · 안목',desc:'커피 한 잔에 담긴 도시의 풍경과 사람들의 이야기를 만나보세요.',duration:265,category:'미식',hue:['#5a4636','#2a211a']},{id:'story-003',title:'바다의 이름을 기억하는 법',region:'강릉 · 경포',desc:'동해를 마주한 도시에서 오래도록 이어진 풍경의 이야기를 들어보세요.',duration:294,category:'풍경',hue:['#2f5560','#18282d']}];
+const stampBooks=[{title:'서울 야경명소',desc:'도시의 불빛을 따라 달리는 밤길',places:['N서울타워','낙산공원 성곽길','반포 달빛무지개분수','북악스카이웨이']},{title:'강릉 바다·호수 산책',desc:'물가를 따라 천천히 걷는 코스',places:['경포호','안목 커피거리','강릉솔향수목원','초당 순두부마을']},{title:'강원 숲길 힐링',desc:'숲과 고찰에서 속도를 늦추는 시간',places:['대관령 양떼목장','치악산 둘레길','횡성 숲체원','홍천 수타사']},{title:'강릉 역사·문화',desc:'오래된 집과 이야기를 만나는 길',places:['오죽헌','강릉 선교장','대관령박물관','강릉향교']}];
+const destinations=[{name:'강릉',address:'강원특별자치도 강릉시 '},{name:'경포해변',address:'강원특별자치도 강릉시 · 경포 해안'},{name:'안목해변',address:'강원특별자치도 강릉시 · 안목 커피거리'}];
+const s={tab:'log',stage:'onboard',onboarded:false,prefs:[],page:'destination',destination:null,draftDestination:null,route:0,detourVia:null,naviVoice:false,autoRecord:false,continuous:false,gear:'P',pausedBy:null,saved:[],recoText:'',recoPlace:null,visited:Object.fromEntries([...stampBooks[2].places,...stampBooks[0].places.slice(0,2),stampBooks[3].places[0]].map(place=>[place,true])),stampCompleted:{[stampBooks[2].title]:'2026-11-11'},waypoints:[],track:0,playing:false,elapsed:0,dwell:0};
+const $=sel=>root.querySelector(sel); const $$=sel=>Array.from(root.querySelectorAll(sel));
+const format=t=>{t=Math.max(0,Math.floor(t));return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')};
+const prefs=[['nature','자연 · 풍경'],['food','카페 · 미식'],['culture','역사 · 문화']];
+const stampCount=()=>Object.keys(s.visited).filter(n=>stampBooks.some(b=>b.places.includes(n))).length;
+const prefName=id=>(prefs.find(p=>p[0]===id)||[])[1];
+const mins=t=>{const m=t.match(/(\d+)시간\s*(\d+)분/);return m?(+m[1])*60+(+m[2]):0};
+const DETOUR=[12,8,5];
+/* 고른 취향(없으면 전체)을 섞어 경로별 추천 3곳 */
+function placesFor(r){const keys=s.prefs.length?s.prefs:prefs.map(p=>p[0]);const lists=keys.map(k=>r.places[k].map(p=>[...p,k]));const out=[];for(let i=0;out.length<3&&i<3;i++)for(const l of lists){const p=l[i];if(p&&!out.some(o=>o[0]===p[0])&&out.length<3)out.push(p)}return out}
+const prefSummary=()=>s.prefs.length?s.prefs.map(prefName).join(', '):'골고루';
+/* 현대차 내비 경유지는 최대 2개 (NaviHelper WaypointIndex.FIRST/SECOND) */
+const WP_MAX=2;
+let pendingWp=null;
+function dropWaypoint(n){s.waypoints=s.waypoints.filter(x=>x!==n);if(s.route!==0&&s.detourVia===n){s.route=0;s.detourVia=null}}
+function applyWaypoint(a){
+  if(a.type==='detour'){if(s.route!==0&&s.detourVia)dropWaypoint(s.detourVia);s.route=a.i;s.detourVia=a.name;s.waypoints.push(a.name);toast(`현대차 내비에 '${a.name}' 경유지 추가를 요청했어요. 내비가 경로를 다시 찾아요 · 경유지 ${s.waypoints.length}/${WP_MAX} (시뮬레이션)`,'route')}
+  else{s.waypoints.push(a.name);toast(`현대차 내비에 '${a.name}' 경유지 추가를 요청했어요 · 경유지 ${s.waypoints.length}/${WP_MAX} (시뮬레이션)`,'route')}
+  render()
+}
+function requestWaypoint(a){
+  if(s.waypoints.includes(a.name)){if(a.type==='detour'){s.route=a.i;s.detourVia=a.name;render()}return}
+  const free=WP_MAX-s.waypoints.length+(a.type==='detour'&&s.route!==0&&s.detourVia?1:0);
+  if(free>0){applyWaypoint(a);return}
+  pendingWp=a;
+  showDialog(`<h3 id="dialog-title">내비 경유지가 가득 찼어요</h3><p>현대차 내비 경유지는 최대 ${WP_MAX}개예요. '${a.name}'을(를) 넣으려면 하나를 빼야 해요.</p><div class="rfm-wp-list">${s.waypoints.map((n,i)=>`<button class="rfm-wp-item" data-replace="${n}"><span>경유지 ${i+1}</span><b>${n}</b><em>빼고 넣기</em></button>`).join('')}</div><div class="dialog-actions"><button class="btn secondary" data-close="1">취소</button></div>`)
+}
+let toastTimeout=null;
+function toast(message,iconName){const el=$('#toast');const copy=document.createElement('span');copy.textContent=message;el.replaceChildren(copy);if(iconName)el.insertAdjacentHTML('afterbegin',icon(iconName));el.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.remove('show'),2800)}
+function setPage(page){
+  if(!['plan','audio','records','settings'].includes(page))return;
+  s.page=page;
+  $$('.view').forEach(v=>v.classList.toggle('active',v.id==='page-'+page));
+  $$('.navitem').forEach(v=>{const on=v.dataset.page===page;v.classList.toggle('active',on);if(on)v.setAttribute('aria-current','page');else v.removeAttribute('aria-current')});
+  render()
+}
+function render(){
+const dd=s.draftDestination,r=routes[s.route];
+renderPlayer();
+$('#onboard-list').innerHTML=prefs.map(([id,t])=>{const on=s.prefs.includes(id);return `<button class="big-choice" data-onpref="${id}" aria-pressed="${on}"><span class="choice-label">${t}</span>${on?icon('check'):''}</button>`}).join('');
+$('#navi-title').textContent=dd?'내비 목적지를 받아왔어요':'내비에서 목적지를 설정해 주세요';
+$('#navi-card').innerHTML=dd?`<span class="rfm-navi-icon">${icon('route')}</span><div><small>현대차 내비 · 안내 중</small><strong>${dd.name}</strong><span>${dd.address}</span></div><em>NaviHelper로 받아옴</em>`:`<span class="rfm-navi-icon off">${icon('route')}</span><div><small>현대차 내비</small><strong>설정된 목적지 없음</strong><span>내비에서 목적지를 정하면 자동으로 받아와요.</span></div>`;
+$('#destination-results').innerHTML=destinations.map((d,i)=>`<button class="rfm-chip" data-destination="${i}" aria-pressed="${dd===d}">🚗 내비 목적지 '${d.name}'</button>`).join('');
+$('#page-plan').dataset.stage=s.stage;$('#journey-summary').classList.toggle('is-set',!!dd);
+$('#destination-selection').textContent=dd?dd.name:'내비 목적지 없음';$('#destination-address').textContent=dd?dd.address:'';
+const navi=s.destination;
+$('#choose-navi').innerHTML=navi?`<span class="rfm-navi-icon">${icon('route')}</span><div><small>현대차 내비 · 안내 중</small><strong>${navi.name}</strong><span>${navi.address}</span></div><em>NaviHelper로 받아옴</em>`:'';
+$('#pref-summary').textContent=prefSummary();
+$('#wp-slots').textContent=`내비 경유지 ${s.waypoints.length}/${WP_MAX}`;$('#wp-slots').classList.toggle('full',s.waypoints.length>=WP_MAX);
+$('#route-basis').innerHTML=s.route===0?'현대차 내비 경로 기준이에요(예상). 경유 시간은 대략적인 값이에요.':`<b>${r.title}</b>로 가도록 내비에 경유지를 요청했어요. 바뀐 경로 기준이에요(예상).`;
+$('#recommendation-list').innerHTML=placesFor(r).map((p,i)=>{const on=s.saved.includes(p[0]),wp=s.waypoints.includes(p[0]);return `<div class="pick-row"><span class="rec-number">0${i+1}</span><div><strong>${p[0]}</strong><small>${p[1]} · ${prefName(p[4])} · 경유 +${DETOUR[i]}분</small></div><button class="rfm-save${on?' on':''}" data-save="${p[0]}" aria-pressed="${on}" aria-label="${p[0]} 나중에 보기">${icon('bookmark')}<span>${on?'담음':'나중에 보기'}</span></button><button class="rfm-save${wp?' on':''}" data-waypoint="${p[0]}" aria-pressed="${wp}" aria-label="${p[0]} 내비 경유지로 추가">${icon('route')}<span>${wp?'경유지 요청됨':'내비 경유지로'}</span></button></div>`}).join('');
+$('#route-suggest').innerHTML=routes.map((x,i)=>{if(i===0)return s.route===0?'':`<div class="rfm-suggest"><div><b>원래 내비 경로로 돌아가기</b><small>요청한 경유지를 빼고 내비 경로대로 가요</small></div><button class="rfm-save" data-detour="0">원래대로</button></div>`;const via=placesFor(x)[0][0],d=mins(x.time)-mins(routes[0].time),on=s.route===i;return `<div class="rfm-suggest${on?' on':''}"><div><span class="rfm-suggest-tag">${x.tag}</span><b>${x.title}로 가 볼까요?</b><small>예상 +${d}분 · ${via} 경유 · ${x.desc}</small></div><button class="rfm-save${on?' on':''}" data-detour="${i}" aria-pressed="${on}">${icon('route')}<span>${on?'경유지 요청됨':'내비에 경유지 추가'}</span></button></div>`}).join('');
+$('#cta-summary').textContent=s.destination?`내비 목적지 ${s.destination.name} · ${s.route===0?'내비 경로':r.title} · 예상 ${r.time} · 취향 ${prefSummary()}`:'';
+$('#story-route').textContent=s.destination?`내비 목적지 ${s.destination.name} · ${r.title}`:'내비 목적지 없음 · 추천 이야기';
+$('#story-list').innerHTML=trackData.map((t,i)=>`<button class="rfm-story${s.track===i?' on':''}" data-track="${i}"><span class="rfm-story-art" style="background:linear-gradient(135deg,${t.hue[0]},${t.hue[1]})"></span><span class="rfm-story-text"><strong>${t.title}</strong><small>${t.region} · ${t.category} · ${format(t.duration)}</small></span>${s.track===i&&s.playing?'<b class="rfm-eq">재생 중</b>':''}</button>`).join('');
+$('#saved-count').textContent=s.saved.length+'곳';
+$('#saved-list').innerHTML=s.saved.length?s.saved.map(n=>`<div class="rfm-saved">${icon('pin')}<span>${n}</span><button class="btn text small" data-unsave="${n}">빼기</button></div>`).join(''):'<p class="rfm-empty">추천 장소나 주행 중 들은 추천을 담아 두면<br>주차한 뒤 여기서 확인할 수 있어요.</p>';
+$('#record-stamps').innerHTML=stampCount()+'<span style="font-size:16px;color:#9a9f9b;margin-left:5px">개</span>';
+$$('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===s.tab));$('.tabs').dataset.active=s.tab;$('#tab-log').classList.toggle('hide',s.tab!=='log');$('#tab-stamp').classList.toggle('hide',s.tab!=='stamp');
+$('#stamp-list').innerHTML=[...stampBooks].sort((x,y)=>y.places.filter(n=>s.visited[n]).length-x.places.filter(n=>s.visited[n]).length).map(b=>{const n=b.places.filter(x=>s.visited[x]).length,t=b.places.length,done=n===t;return `<article class="book${done?' done':''}"><div class="book-head"><div><strong class="book-title">${b.title}</strong><span class="book-desc">${b.desc}</span></div><span class="book-count">${done?'완료 ':''}${n}/${t}</span></div><div class="book-bar"><i style="width:${n/t*100}%"></i></div>${done&&s.stampCompleted[b.title]?`<small class="book-completed">완료일 ${s.stampCompleted[b.title]}</small>`:''}<div class="slots">${b.places.map((x,i)=>`<div class="slot${s.visited[x]?' on':''}"><span class="slot-mark">${s.visited[x]?icon('check'):i+1}</span><div class="slot-text"><strong>${x}</strong></div></div>`).join('')}</div></article>`}).join('');
+$('#settings-preferences').innerHTML=prefs.map(([id,t])=>`<button class="choice-item ${s.prefs.includes(id)?'on':''}" data-pref="${id}" aria-pressed="${s.prefs.includes(id)}">${t}</button>`).join('');$('#setting-auto-record').checked=s.autoRecord;$('#setting-continuous').checked=s.continuous;
+$$('[data-gear]').forEach(g=>g.setAttribute('aria-pressed',g.dataset.gear===s.gear));
+$('#drive').classList.toggle('open',s.gear==='D');$('#drive').setAttribute('aria-hidden',s.gear!=='D');
+$('#drive-reco').classList.toggle('hide',!s.recoText);$('#drive-reco-text').textContent=s.recoText;
+$('#navi-voice').classList.toggle('hide',!s.naviVoice);
+$('#tbt-arrow').textContent=s.naviVoice?'↱':'↑';$('#tbt-dist').textContent=s.naviVoice?'300m':(s.destination?'12km':'—');$('#tbt-road').textContent=s.naviVoice?'오른쪽 · 대관령 IC':(s.destination?`영동고속도로 · ${s.destination.name} 방면`:'목적지 없음');
+$('#drive-navi-state').textContent=s.destination?'길 안내 중':'목적지 없이 주행 중';
+$('#drive-eta').innerHTML=s.destination?`<span>목적지 <b>${s.destination.name}</b></span><span>남은 시간 <b>${r.time}</b></span>`:'<span>목적지 없음</span>';
+}
+const artSvg=t=>`<svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g-${t.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t.hue[0]}"/><stop offset="1" stop-color="${t.hue[1]}"/></linearGradient></defs><rect width="200" height="200" fill="url(#g-${t.id})"/><path d="M0 150C40 120 70 160 110 130S170 100 200 115V200H0Z" fill="#000" opacity=".18"/><path d="M0 170C50 150 90 185 140 160S185 150 200 155V200H0Z" fill="#000" opacity=".22"/><text x="16" y="38" fill="#eef4e9" font-family="Pretendard, sans-serif" font-size="13" font-weight="700" letter-spacing="2" opacity=".8">ROADFM</text><text x="16" y="182" fill="#eef4e9" font-family="Pretendard, sans-serif" font-size="20" font-weight="700">${t.region.split(' · ')[0]}</text></svg>`;
+function statusText(){if(s.playing)return '재생 중';if(s.pausedBy==='focus')return '내비 안내 중 · 잠시 멈춤';if(s.pausedBy==='user')return '일시정지';return '대기 중'}
+function renderPlayer(){
+ const t=trackData[s.track],pct=Math.min(100,s.elapsed/t.duration*100);
+ $('#now-art').innerHTML=artSvg(t);$('#drive-art').innerHTML=artSvg(t);
+ $('#now-title').textContent=t.title;$('#now-desc').textContent=t.desc;
+ $('#audio-status').textContent=`${t.region} · ${t.category} · ${statusText()}`;
+ $('#drive-title').textContent=t.title;$('#drive-region').textContent=t.region;$('#drive-status').textContent=statusText();
+ ['now','drive'].forEach(k=>{$(`#${k}-bar`).style.width=pct+'%';$(`#${k}-elapsed`).textContent=format(s.elapsed);$(`#${k}-duration`).textContent=format(t.duration)});
+ ['#audio-toggle','#drive-toggle'].forEach(id=>{$(id).innerHTML=icon(s.playing?'pause':'play');$(id).setAttribute('aria-label',s.playing?'일시정지':'이야기 듣기')});
+ $('#audio-toggle-label').textContent=s.playing?'일시정지':(s.pausedBy?'이어 듣기':'이야기 듣기');
+}
+function closeDialog(){$('#overlay').classList.remove('open');$('#dialog-content').innerHTML=''}
+function showDialog(html){$('#dialog-content').innerHTML=html;$('#overlay').classList.add('open');const focus=$('#dialog-content').querySelector('button');if(focus)focus.focus()}
+function togglePref(p){s.prefs=s.prefs.includes(p)?s.prefs.filter(x=>x!==p):[...s.prefs,p];render()}
+function finishOnboard(skip){s.onboarded=true;if(skip)s.prefs=[];s.stage=s.destination?'choose':'dest';toast(skip?'취향 없이 골고루 추천해요. 설정에서 언제든 고를 수 있어요.':`취향(${prefSummary()})을 저장했어요. 설정에서 바꿀 수 있어요.`,'check');render()}
+/* 재생 규칙: 사용자의 명시적 동작으로만 시작. 위치·시간 경과만으로는 시작하지 않는다. */
+let focusTimer=null;
+function play(){clearTimeout(focusTimer);s.playing=true;s.pausedBy=null;render()}
+function pause(by){s.playing=false;s.pausedBy=by;render()}
+function togglePlay(){s.playing?pause('user'):play()}
+function changeTrack(i,{start=false}={}){s.track=(i+trackData.length)%trackData.length;s.elapsed=0;if(start)play();else render()}
+function setGear(g){if(s.gear===g)return;s.gear=g;if(g==='P')s.recoText='';toast(g==='D'?'주행 중 · 화면은 현대차 내비, ROADFM은 소리·핸들·음성으로 함께해요.':'주차 중 · ROADFM 화면을 쓸 수 있어요.');render()}
+function savePlace(name){if(!name||s.saved.includes(name))return false;s.saved.push(name);return true}
+function onTrackEnd(){
+  if(s.continuous&&s.playing){s.elapsed=0;s.track=(s.track+1)%trackData.length;toast('이어서 듣기 · 다음 지역 이야기를 이어서 들려줘요.','headphones')}
+  else{s.playing=false;s.pausedBy=null;s.elapsed=0;toast('이야기가 끝났어요. 이어서 듣기가 꺼져 있어 멈춰요.')}
+  render()
+}
+root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;
+ if(b.dataset.destination!==undefined){const d=destinations[Number(b.dataset.destination)];if(!d)return;s.draftDestination=d;s.destination=d;s.route=0;if(s.onboarded)s.stage='choose';toast(`현대차 내비에 '${d.name}' 목적지가 설정됐어요. ROADFM이 받아왔어요 (NaviHelper · 시뮬레이션)`,'route');render();return}
+  if(b.dataset.waypoint){const n=b.dataset.waypoint;if(s.waypoints.includes(n)){dropWaypoint(n);toast(`'${n}'을(를) 내비 경유지에서 뺐어요 (시뮬레이션)`,'route');render()}else requestWaypoint({type:'place',name:n});return}
+  if(b.dataset.replace){const old=b.dataset.replace;closeDialog();dropWaypoint(old);if(pendingWp){const a=pendingWp;pendingWp=null;applyWaypoint(a);toast(`'${old}'을(를) 빼고 '${a.name}'을(를) 내비 경유지로 요청했어요 (시뮬레이션)`,'route')}else render();return}
+  if(b.dataset.close){closeDialog();pendingWp=null;return}
+  if(b.dataset.onpref){togglePref(b.dataset.onpref);return}
+  if(b.id==='onboard-done'){finishOnboard(false);return}
+  if(b.id==='onboard-skip'){finishOnboard(true);return}
+  if(b.id==='pref-change'){setPage('settings');return}
+  if(b.dataset.detour!==undefined){const i=+b.dataset.detour;if(i===0){if(s.detourVia){const v=s.detourVia;dropWaypoint(v)}s.route=0;s.detourVia=null;toast('원래 내비 경로로 안내하도록 경유지를 뺐어요 (시뮬레이션)','route');render()}else requestWaypoint({type:'detour',i,name:placesFor(routes[i])[0][0]});return}
+  if(b.id==='btn-change-dest'){s.stage='dest';render();return}
+  if(b.id==='start-journey'){if(!s.destination)return;setPage('audio');toast("이 길의 이야기가 준비됐어요. '이야기 듣기'를 누르면 시작해요.",'headphones');return}
+  if(b.dataset.gear){setGear(b.dataset.gear);return}
+  if(b.dataset.save){const n=b.dataset.save;if(s.saved.includes(n)){s.saved=s.saved.filter(x=>x!==n)}else{savePlace(n);toast(`'${n}'을(를) 나중에 보기에 담았어요.`,'bookmark')}render();return}
+  if(b.dataset.unsave){s.saved=s.saved.filter(x=>x!==b.dataset.unsave);render();return}
+  if(b.id==='drive-toggle'||b.id==='sim-wheel'){togglePlay();if(b.id==='sim-wheel')toast(s.playing?'핸들 버튼 · 재생':'핸들 버튼 · 일시정지');return}
+  if(b.id==='drive-prev'){changeTrack(s.track-1,{start:s.playing});return}
+  if(b.id==='drive-next'){changeTrack(s.track+1,{start:s.playing});return}
+  if(b.id==='sim-voice'){const i=trackData.findIndex(t=>t.region.startsWith('강릉'));toast(`음성 검색 "강릉" → '${trackData[i].title}' 재생`,'mic');changeTrack(i,{start:true});return}
+  if(b.id==='sim-navi'){
+    if(!s.playing){s.naviVoice=true;render();setTimeout(()=>{s.naviVoice=false;render()},2500);toast('내비 안내 · 재생 중이 아니라 이야기에는 변화 없어요.');return}
+    s.elapsed=Math.max(0,s.elapsed-3);s.naviVoice=true;pause('focus');toast('내비 안내 중 · 이야기를 잠시 멈추고 3초 되감았어요.');
+    focusTimer=setTimeout(()=>{s.naviVoice=false;if(s.pausedBy==='focus'){play();toast('안내가 끝나 3초 전부터 이어서 들려줘요.')}else render()},3000);return}
+  if(b.id==='sim-reco'){const ps=placesFor(routes[s.route]),p=ps.find(x=>!s.saved.includes(x[0]))||ps[0];s.recoPlace=p[0];s.recoText=`"곧 지나는 길에 ${p[0]}이(가) 있어요. ${p[1]}. 들러 보고 싶다면 나중에 보기에 담아 두세요."`;render();return}
+  if(b.id==='sim-save'){const ok=savePlace(s.recoPlace);s.recoText='';toast(ok?`'${s.recoPlace}'을(를) 나중에 보기에 담았어요. 주차 후 확인하세요.`:'이미 담아 둔 장소예요.','bookmark');render();return}
+if(b.dataset.tab){s.tab=b.dataset.tab;render();return}
+if(b.dataset.page){setPage(b.dataset.page);return}
+if(b.dataset.open){setPage(b.dataset.open);return}
+if(b.dataset.pref){togglePref(b.dataset.pref);return}
+if(b.dataset.track!==undefined){changeTrack(Number(b.dataset.track),{start:true});return}
+if(b.id==='audio-toggle'){togglePlay();return}
+if(b.id==='audio-prev'){changeTrack(s.track-1,{start:s.playing});return}
+if(b.id==='audio-next'){changeTrack(s.track+1,{start:s.playing});return}
+});
+$('#overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeDialog()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDialog()});
+$('#setting-auto-record').addEventListener('change',e=>{s.autoRecord=e.target.checked;toast(s.autoRecord?'방문 자동 기록을 켰어요.':'방문 자동 기록을 껐어요.');render()});
+$('#setting-continuous').addEventListener('change',e=>{s.continuous=e.target.checked;toast(s.continuous?'이어서 듣기를 켰어요. 듣고 있을 때만 다음 이야기가 이어져요.':'이어서 듣기를 껐어요. 이야기가 끝나면 멈춰요.');render()});
+const clockEl=$('#clock');function updateTime(){const now=new Date();const date=now.toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});const weekday=now.toLocaleDateString('ko-KR',{weekday:'short',timeZone:'Asia/Seoul'});const time=now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Seoul'});clockEl.textContent=`${date} (${weekday}) ${time}`};updateTime();setInterval(updateTime,30000);
+setInterval(()=>{if(!s.playing)return;s.elapsed+=1;if(s.elapsed>=trackData[s.track].duration){onTrackEnd();return}if(s.page==='audio'||s.gear==='D')renderPlayer()},1000);
+const sizes=[[1280,720,'16:9'],[1920,720,'8:3']];let sz=0;
+function fit(){const [w,hh]=sizes[sz];const k=Math.min(innerWidth/(w+16),innerHeight/(hh+24),1.5);const st=document.documentElement.style;st.setProperty('--car-w',w);st.setProperty('--car-h',hh);st.setProperty('--k',k.toFixed(4))}
+$('#ratio-toggle')&&0;document.getElementById('ratio-toggle').addEventListener('click',e=>{sz=(sz+1)%sizes.length;e.target.textContent=sizes[sz][2];fit()});addEventListener('resize',fit);fit();
+setPage('plan');
+})();
+</script>
+</body></html>

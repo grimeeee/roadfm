@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>쉽게 보는 차 안 규칙</title>
+<style>
+:root{
+  --bg:#fbfaf5; --surface:#ffffff; --surface-2:#f3f1e8; --text:#24221c; --muted:#6b675c; --border:#e4e0d3;
+  --accent:#2f7a55; --red:#c0392b; --red-bg:#fdecea; --orange:#b05f00; --orange-bg:#fff3df; --green:#2f7a55; --green-bg:#e6f4ec; --blue:#2463a6; --blue-bg:#e8f1fb;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15140f; --surface:#1e1c17; --surface-2:#27251e; --text:#ece8dc; --muted:#a8a293; --border:#353228;
+    --accent:#72cf9e; --red:#ff8f84; --red-bg:#3b1d1a; --orange:#ffbd66; --orange-bg:#3a2a12; --green:#72cf9e; --green-bg:#173024; --blue:#8fc0f2; --blue-bg:#182a3c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15140f; --surface:#1e1c17; --surface-2:#27251e; --text:#ece8dc; --muted:#a8a293; --border:#353228;
+  --accent:#72cf9e; --red:#ff8f84; --red-bg:#3b1d1a; --orange:#ffbd66; --orange-bg:#3a2a12; --green:#72cf9e; --green-bg:#173024; --blue:#8fc0f2; --blue-bg:#182a3c;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.8 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:36px 16px 80px}
+h1{font-size:28px;line-height:1.35;margin:0 0 10px}
+h2{font-size:22px;margin:52px 0 14px}
+h3{font-size:19px;margin:0;line-height:1.4}
+p{margin:8px 0}
+.lead{font-size:19px;background:var(--green-bg);border-radius:14px;padding:16px 20px;margin:18px 0}
+.story{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.cast{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.who{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.who .em{font-size:30px;line-height:1}
+.who b{display:block;margin-top:6px}
+.who span{color:var(--muted);font-size:15px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin:14px 0}
+.card-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.num{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:16px}
+.red .num{background:var(--red-bg);color:var(--red)}
+.orange .num{background:var(--orange-bg);color:var(--orange)}
+.green .num{background:var(--green-bg);color:var(--green)}
+.row{display:grid;grid-template-columns:96px 1fr;gap:10px;margin-top:8px}
+@media (max-width:560px){.row{grid-template-columns:1fr;gap:2px}}
+.tag{font-size:14px;font-weight:700;color:var(--muted);padding-top:3px}
+.tag.prob{color:var(--red)} .tag.fix{color:var(--green)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:15px;color:var(--muted)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.ask{background:var(--orange-bg);border-radius:10px;padding:8px 12px;margin-top:10px;font-size:15px}
+.drive{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.drive{grid-template-columns:1fr}}
+.drive .box{border-radius:14px;padding:16px 18px}
+.drive .go{background:var(--red-bg)} .drive .park{background:var(--green-bg)}
+.drive ul{margin:6px 0;padding-left:20px}
+ol.steps li,ul li{margin:4px 0}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
+.tbl{overflow-x:auto}
+th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--surface-2)}
+code{font-family:Consolas,monospace;font-size:.85em;background:var(--surface-2);border-radius:4px;padding:0 4px;word-break:break-word}
+.note{color:var(--muted);font-size:15px}
+footer{margin-top:52px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>🚗 ROADFM이 차에 타려면 지켜야 할 약속</h1>
+<p class="note">「Pleos 가이드 점검 보고서」(<code>docs/ROADFM_pleos_guide_review_2026-11-12.html</code>)를 아주 쉽게 다시 쓴 버전 · 2026-11-12</p>
+
+<div class="lead"><b>한 줄 요약:</b> ROADFM은 차 안에서 여행 이야기를 들려주는 <b>이야기꾼 친구</b>예요. 이 친구가 차에 타려면 자동차 회사(Pleos)가 정한 <b>"차 안 예절"</b>을 지켜야 하는데, 지금은 안 지키는 게 몇 개 있어요.</div>
+
+<h2>📖 이야기의 등장인물</h2>
+<div class="cast">
+  <div class="who"><div class="em">🧑‍🎤</div><b>이야기꾼 친구 = ROADFM</b><span>지나가는 동네의 재미난 이야기를 들려줘요.</span></div>
+  <div class="who"><div class="em">🏫</div><b>차 안 예절 선생님 = Pleos</b><span>차에 탈 앱이 규칙을 지키는지 검사해요. 안 지키면 "탈락!"</span></div>
+  <div class="who"><div class="em">🧑‍✈️</div><b>운전하는 사람</b><span>눈은 길을 봐야 해요. 화면을 오래 보면 위험해요.</span></div>
+  <div class="who"><div class="em">🎤</div><b>마이크 한 개</b><span>차 안에는 말할 차례가 있어요. 길 안내, 전화가 더 중요해요.</span></div>
+</div>
+
+<h2>🚦 제일 중요한 규칙: 달릴 때와 주차했을 때</h2>
+<div class="drive">
+  <div class="box go"><b>🔴 달리는 중</b> (빨간불에 잠깐 멈춘 것도 포함!)
+    <ul>
+      <li>귀로 듣는 것만 OK</li>
+      <li>버튼은 "재생 / 멈춤 / 다음" 정도만</li>
+      <li>지도, 퀴즈, 긴 글, 움직이는 그림 ❌</li>
+      <li>약속 안 한 앱은 화면이 아예 가려져요</li>
+    </ul>
+  </div>
+  <div class="box park"><b>🟢 주차했을 때</b> (기어를 P에 넣었을 때)
+    <ul>
+      <li>화면을 마음껏 볼 수 있어요</li>
+      <li>길 고르기, 장소 구경, 퀴즈, 여행 기록 OK</li>
+      <li>글자 입력, 설정 바꾸기 OK</li>
+    </ul>
+  </div>
+</div>
+<p>⚠️ 우리 기획서에는 "<b>정차</b> 중에 퀴즈" 같은 말이 있어요. 그런데 빨간불에 멈춘 건 아직 <b>달리는 중</b>으로 쳐요. 그래서 "정차"를 전부 <b>"주차(P)"</b>로 바꿔야 해요.</p>
+
+<h2>📝 지켜야 할 약속 13가지</h2>
+<div class="legend">
+  <span><i class="dot" style="background:var(--red)"></i>안 지키면 탈락</span>
+  <span><i class="dot" style="background:var(--orange)"></i>먼저 정해야 할 것</span>
+  <span><i class="dot" style="background:var(--green)"></i>만들 때 지킬 것</span>
+</div>
+
+<!-- RED -->
+<div class="card red">
+  <div class="card-head"><div class="num">1</div><h3>🙊 허락 없이 먼저 말 걸지 않기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>차에 타자마자 이야기를 시작하면 안 돼요. 사람이 "들려줘!" 했을 때만 시작해요.</div></div>
+  <div class="row"><div class="tag prob">지금 문제</div><div>시안 화면에 <b>"자동 재생" 스위치가 처음부터 켜져</b> 있어요. 새 동네에 오면 알아서 이야기를 시작해요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 고쳐요</div><div>스위치 이름을 <b>"이어서 듣기"</b>로 바꾸고 처음엔 <b>꺼 둬요</b>. 사람이 이야기를 듣고 있는 중일 때만 다음 동네 이야기를 <b>줄 뒤에 세워요</b>. 멈춰 있을 땐 절대 혼자 시작하지 않아요.</div></div>
+</div>
+
+<div class="card red">
+  <div class="card-head"><div class="num">2</div><h3>🎭 내 직업을 분명하게 말하기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>"듣는 앱" 반에 들어가려면 <b>듣기가 제일 중요한 일</b>이어야 해요. 듣기가 곁다리면 바로 탈락이에요. 이야기 종류(음악, 팟캐스트, 오디오북, 라디오)도 하나 골라야 해요.</div></div>
+  <div class="row"><div class="tag prob">지금 문제</div><div>우리 친구는 이야기도 하지만 <b>길 추천, 방문 기록, 퀴즈</b>도 많이 해요. 선생님이 "넌 듣는 앱이 맞아?" 하고 물을 수 있어요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 고쳐요</div><div>"나는 <b>이야기꾼</b>이에요"라고 소개해요. 이야기 종류는 <b>팟캐스트</b>(회차별 이야기 프로그램)를 골라요. 길 추천, 퀴즈는 "주차했을 때 쓰는 덤 기능"이라고 설명해요. 이야기 목록도 한 줄로 섞지 말고 <b>지역별, 주제별, 최근 들은 것</b>으로 나눠요.</div></div>
+  <div class="ask">❓ 선생님(Pleos)께 물어볼 것: 덤 기능이 이만큼 있어도 "듣는 앱"으로 받아주나요?</div>
+</div>
+
+<div class="card red">
+  <div class="card-head"><div class="num">3</div><h3>🔌 차의 리모컨 단자에 꽂기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>차는 정해진 <b>연결 단자</b>(차가 앱을 조종하는 표준 통로)로 "재생해, 멈춰, 목록 보여줘"라고 말해요. 이 단자가 없으면 차에 아예 못 타요.</div></div>
+  <div class="row"><div class="tag prob">지금 문제</div><div>지금 앱에는 <b>"ROADFM" 글자 화면 하나</b>만 있어요. 단자가 없어요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 고쳐요</div><div>안드로이드가 만들어 둔 표준 플러그(<b>Media3</b>라는 부품)를 붙여요. 앱 소개서(매니페스트)에 "나는 듣는 앱이에요", "뒤에서도 소리를 낼게요"라고 적어요.</div></div>
+</div>
+
+<div class="card red">
+  <div class="card-head"><div class="num">4</div><h3>🙈 달릴 때는 화면이 가려진다는 걸 알기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>"달릴 때도 안전하게 보여줄게요"라고 <b>특별 약속</b>을 안 한 앱은 차가 달리면 화면이 통째로 가려져요.</div></div>
+  <div class="row"><div class="tag prob">지금 문제</div><div>기획서는 "달릴 때 우리 화면에 재생 버튼을 보여준다"고 생각하고 있어요. 그런데 특별 약속을 안 했어요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 고쳐요</div><div>달릴 때는 <b>차에 원래 있는 음악 화면</b>(미디어 센터)을 빌려 써요. 우리 화면은 주차했을 때만 써요. 이렇게 하면 어려운 특별 약속을 안 해도 돼요.</div></div>
+</div>
+
+<div class="card red">
+  <div class="card-head"><div class="num">5</div><h3>🎡 핸들 버튼으로도 조종되게 하기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>핸들에 달린 버튼으로 <b>재생, 멈춤, 끝내기, 번호로 틀기, 찾아서 틀기</b>가 돼야 해요.</div></div>
+  <div class="row"><div class="tag prob">지금 문제</div><div>이야기마다 <b>번호표</b>가 없고, 이야기를 <b>찾는 기능</b>도 없어요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 고쳐요</div><div>서버에서 이야기마다 절대 안 바뀌는 번호표(<code>storyId</code>)를 붙여요. "강릉"이라고 하면 강릉 이야기를 찾아주는 기능도 만들어요.</div></div>
+</div>
+
+<!-- ORANGE -->
+<div class="card orange">
+  <div class="card-head"><div class="num">6</div><h3>📺 차의 기본 음악 화면을 빌려 쓰기로 정하기</h3></div>
+  <div class="row"><div class="tag">왜</div><div>차의 기본 음악 화면(미디어 센터)을 빌리면 <b>핸들 버튼, 돌리는 다이얼, 음악 버튼</b>이 저절로 연결돼요. 안 빌리면 다이얼과 음악 버튼은 아예 못 써요.</div></div>
+  <div class="row"><div class="tag fix">정할 것</div><div><b>빌려 쓰기</b>로 정해요. 4번 약속과 한 세트예요. 빌리는 방법은 설명서가 아직 없어서 선생님께 물어봐야 해요.</div></div>
+</div>
+
+<div class="card orange">
+  <div class="card-head"><div class="num">7</div><h3>🗣️ 차의 음성비서 말 알아듣기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>차에는 <b>Gleo</b>라는 음성비서가 있어요. "강릉 이야기 틀어줘!"라고 하면 우리 앱이 알아들어야 해요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 고쳐요</div><div>먼저 3번(표준 플러그)과 5번(찾기 기능)을 만들면 기본은 저절로 돼요. 나중에 "근처 이야기 들려줘" 같은 우리만의 말을 3~5개 더 가르쳐요.</div></div>
+</div>
+
+<div class="card orange">
+  <div class="card-head"><div class="num">8</div><h3>🅿️ "멈춤"과 "주차"를 헷갈리지 않기</h3></div>
+  <div class="row"><div class="tag prob">지금 문제</div><div>기획서에 "정차 중에 퀴즈", "동승자는 괜찮아요" 같은 말이 있어요. 빨간불은 달리는 중으로 치고, 동승자는 괜찮다는 규칙은 <b>어디에도 없어요</b>.</div></div>
+  <div class="row"><div class="tag fix">이렇게 고쳐요</div><div>"정차"를 모두 <b>"주차(P)"</b>로 바꾸고 동승자 말은 지워요. 길 고르기는 <b>출발 전에</b> 끝내게 하고, 달리다 생긴 새 추천은 "나중에 보기"에 모아 둬요.</div></div>
+</div>
+
+<div class="card orange">
+  <div class="card-head"><div class="num">9</div><h3>🗺️ 달릴 때 화면에서 지도와 움직이는 그림 빼기</h3></div>
+  <div class="row"><div class="tag prob">지금 문제</div><div>시안의 이야기 듣기 화면에 <b>길 지도</b>와 <b>출렁이는 소리 물결</b>이 있어요. 지도는 내비 앱만 쓸 수 있고, 움직이는 그림은 눈을 뺏어요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 고쳐요</div><div>달릴 때는 <b>가만히 있는 동네 사진 + 제목 + 진행 막대 + 버튼</b>만 보여줘요. 지도는 주차 화면으로 옮겨요.</div></div>
+</div>
+
+<!-- GREEN -->
+<div class="card green">
+  <div class="card-head"><div class="num">10</div><h3>🎤 마이크 차례 지키기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>차 안 마이크는 하나예요. 더 중요한 소리가 나오면 양보해요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 해요</div><div>
+    <ul>
+      <li>📞 <b>전화, 음성비서가 잠깐 쓸 때</b> → 잠깐 멈췄다가, 끝나면 다시 이어서</li>
+      <li>🚫 <b>마이크를 완전히 뺏겼을 때</b> → 이야기를 끝내요. 혼자 다시 시작하지 않아요</li>
+      <li>🧭 <b>길 안내가 겹칠 때</b> → 선생님은 "소리를 작게"라고 해요. 그런데 이야기는 말소리라 겹치면 못 알아들어요. 그래서 <b>잠깐 멈추고 3초 되감기</b>를 제안해요</li>
+      <li>❌ 우리 이야기를 "길 안내 소리"라고 속이면 안 돼요</li>
+    </ul></div></div>
+  <div class="ask">❓ 물어볼 것: 길 안내가 나올 때 작게 말고 멈춰도 되나요?</div>
+</div>
+
+<div class="card green">
+  <div class="card-head"><div class="num">11</div><h3>👋 앱을 끄면 이야기도 끝내기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>사람이 앱을 밀어서 끄거나 손가락 세 개로 끄면, 이야기도 <b>꼭 멈추고 정리</b>해야 해요. 정리하는 순서도 정해져 있어요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 해요</div><div>Media3 부품이 대부분 알아서 해줘요. 우리는 "끌 때 먼저 멈추고, 그다음 문 닫기" 순서만 지키면 돼요.</div></div>
+</div>
+
+<div class="card green">
+  <div class="card-head"><div class="num">12</div><h3>📜 달릴 때 긴 글 안 보여주기</h3></div>
+  <div class="row"><div class="tag">규칙</div><div>달리는 중에는 긴 글, 글자 입력, 설정 바꾸기가 막혀요.</div></div>
+  <div class="row"><div class="tag fix">이렇게 해요</div><div>장소 설명은 <b>귀로만</b> 들려줘요. 첫 화면엔 "이 길의 이야기", "최근 들은 이야기"처럼 <b>한 번 누르면 되는 버튼</b>을 둬요. 목적지는 글자 입력보다 내비에서 받아오거나 말로 해요.</div></div>
+</div>
+
+<div class="card green">
+  <div class="card-head"><div class="num">13</div><h3>📍 방문 기록은 따로 챙기기</h3></div>
+  <div class="row"><div class="tag prob">걱정</div><div>"이 장소에 10분 머물렀네, 방문했구나!" 하는 기능을 이야기 기능 안에 넣으면, 앱을 끌 때 같이 꺼져 버려요(11번 규칙 때문에).</div></div>
+  <div class="row"><div class="tag fix">이렇게 해요</div><div>방문 기록은 <b>따로 떼어 만들고</b>, 사람이 "기록해줘"를 켰을 때 여행하는 동안만 동작하게 해요.</div></div>
+</div>
+
+<h2>🪜 앞으로 할 일 순서</h2>
+<ol class="steps">
+  <li><b>글 고치기</b> — 기획서에서 "정차"를 "주차"로, "자동 재생"을 "이어서 듣기"로 바꾸고 시안 화면을 고쳐요. 선생님께 질문을 보내요.</li>
+  <li><b>이야기 틀기 뼈대</b> — 표준 플러그(Media3)를 붙이고, 샘플 이야기 하나로 재생, 멈춤, 마이크 양보를 시험해요.</li>
+  <li><b>번호표와 찾기</b> — 서버에 이야기 번호표와 찾기 기능을 만들고, 음성비서로 "강릉 이야기 틀어줘"를 시험해요.</li>
+  <li><b>나머지</b> — 차의 기본 음악 화면 연결, 주차 화면(길 추천, 퀴즈, 기록), 방문 기록을 만들어요.</li>
+</ol>
+
+<h2>❓ 선생님(Pleos)께 물어볼 것</h2>
+<ol>
+  <li>덤 기능(길 추천, 기록, 퀴즈)이 있어도 "듣는 앱"으로 받아주나요?</li>
+  <li>이야기 종류를 "팟캐스트"로 해도 되나요?</li>
+  <li>듣는 중에 다음 동네 이야기를 줄 세우는 건 "허락 없이 말 걸기"가 아니죠?</li>
+  <li>차의 기본 음악 화면은 어떻게 빌려 쓰나요?</li>
+  <li>Media3 플러그로 핸들 버튼 규칙을 지킨 걸로 쳐주나요?</li>
+  <li>달릴 때 보여줄 화면을 만들려면 특별 약속을 어떻게 하나요?</li>
+  <li>한국에서는 어떤 규칙 표를 따르나요? 언제부터 "달리는 중"으로 치나요?</li>
+  <li>길 안내가 나올 때 이야기를 멈춰도 되나요?</li>
+  <li>동승자를 위한 예외가 있나요?</li>
+</ol>
+
+<h2>🔎 조금 더 알고 싶다면 (비유 → 진짜 이름)</h2>
+<div class="tbl"><table>
+<tr><th>이 글의 비유</th><th>진짜 이름</th></tr>
+<tr><td>차 안 예절 선생님</td><td>Pleos 앱 심사, 차량 앱 개발 가이드</td></tr>
+<tr><td>허락 없이 먼저 말 걸기</td><td>자동 재생(auto play) 금지 규정</td></tr>
+<tr><td>내 직업 / 이야기 종류</td><td>앱 카테고리 Music/Audio, 하위 카테고리 Podcast, <code>android:appCategory="audio"</code></td></tr>
+<tr><td>리모컨 단자 / 표준 플러그</td><td><code>MediaBrowserService</code> / Media3 <code>MediaLibraryService</code>, <code>MediaSession</code></td></tr>
+<tr><td>달릴 때 보여줄게요 특별 약속</td><td>DO(Distraction Optimized) 선언, <code>CarUxRestrictions</code></td></tr>
+<tr><td>차의 기본 음악 화면</td><td>미디어 센터(Pleos의 미디어 앱 템플릿)</td></tr>
+<tr><td>번호표 / 찾아서 틀기</td><td>media ID 기반 재생 / 검색 기반 재생(<code>onSearch</code>)</td></tr>
+<tr><td>마이크 차례</td><td>오디오 포커스(<code>AUDIOFOCUS_LOSS</code>, <code>LOSS_TRANSIENT</code>, <code>CAN_DUCK</code>)</td></tr>
+<tr><td>앱 끌 때 정리 순서</td><td>서비스 생명주기(<code>onTaskRemoved</code> → <code>stopSelf</code>)</td></tr>
+<tr><td>달리는 중 / 주차</td><td>Drive / Parking 주행 규제 상태(속도·기어·브레이크로 판정)</td></tr>
+</table></div>
+<p class="note">💡 비유의 한계: 실제로는 "마이크"가 하나뿐인 건 아니에요. 길 안내와 음악은 동시에 나올 수 있고, 차가 규칙표에 따라 소리 크기와 차례를 조절해요. 자세한 내용은 원래 보고서 <code>ROADFM_pleos_guide_review_2026-11-12.html</code>에 있어요.</p>
+
+<footer>ROADFM 내부 검토 자료(쉬운 버전) · Pleos 문서는 2026-11-12 기준으로 확인했어요.</footer>
+</div>
+</body>
+</html>

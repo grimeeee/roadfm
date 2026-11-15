@@ -58,7 +58,8 @@ class NaviProbe(context: Context) {
     private val listener = object : NaviHelperEventListener {
         override fun onDestinationInfo(destinationInfo: DestinationInfo) {
             log("onDestinationInfo: $destinationInfo")
-            ui { destination.value = destinationInfo }
+            val valid = destinationInfo.takeUnless { it.isEmpty() }
+            ui { destination.value = valid }
         }
 
         override fun onDestinationChanged() {
@@ -81,7 +82,13 @@ class NaviProbe(context: Context) {
         override fun onReRouteEnded() = log("onReRouteEnded")
         override fun onRouteCancelled() = log("onRouteCancelled")
         override fun onRouteEnded() = log("onRouteEnded")
-        override fun onNavigationStatus(navigationStatus: NavigationStatus) = log("onNavigationStatus: $navigationStatus")
+        override fun onNavigationStatus(navigationStatus: NavigationStatus) {
+            log("onNavigationStatus: $navigationStatus")
+            if (navigationStatus == NavigationStatus.ROUTE_DRIVE) {
+                log("길 안내 재시작 → 목적지 다시 조회")
+                naviHelper.getDestinationInfo()
+            }
+        }
         override fun onError(errorCode: NaviErrorCode) = log("onError: $errorCode")
     }
 
@@ -130,6 +137,8 @@ class NaviProbe(context: Context) {
         naviHelper.release()
         main.removeCallbacksAndMessages(null)
     }
+
+    private fun DestinationInfo.isEmpty() = name.isBlank() && latitude == 0.0 && longitude == 0.0
 
     companion object {
         const val TAG = "RoadFmNavi"

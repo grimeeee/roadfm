@@ -7,9 +7,11 @@ ROADFM은 Pleos Connect 차량에서 동작하는 **위치 기반 오디오 여�
 
 ![ROADFM 주행 중 화면](docs/images/hero.png)
 
-| 시연 영상 | 차량 앱 APK | UX 프로토타입 |
-|---|---|---|
-| _(링크)_ | [`apk/roadfm-release.apk`](apk/roadfm-release.apk) | [`ROADFM_prototype_final.html`](prototypes/prototype2/ROADFM_prototype_final.html) |
+| 시연 (UX 프로토타입) | 차량 앱 APK |
+|---|---|
+| [▶ 시연 보기](https://grimeeee.github.io/roadfm/prototypes/prototype2/ROADFM_prototype_final.html)<br>소스: [`ROADFM_prototype_final.html`](prototypes/prototype2/ROADFM_prototype_final.html) | [`apk/앞으로의여정예쩡_ROADFM_release.apk`](<apk/앞으로의여정예쩡_ROADFM_release.apk>) |
+
+시연은 사용 흐름 전체를 자동 재생하는 UX 프로토타입입니다. 「시연 보기」 링크를 열면 브라우저에서 바로 재생됩니다.
 
 ---
 
@@ -55,10 +57,15 @@ ROADFM은 목적지를 다시 입력받지 않습니다. 사용자가 현대차 
 
 ## Pleos Connect SDK 활용
 
-| SDK | 활용 | 상태 |
+| SDK / API | 활용 | 상태 |
 |---|---|---|
-| NaviHelper | 내비 목적지 조회, 목적지 변경 감지, 경유지 조회·추가·삭제 | 차량 앱에 구현 |
-| Media3 (`MediaLibraryService`) | 이야기 재생, 차량 미디어 화면·미디어 버튼·음성 명령 연동, 오디오 포커스 처리 | 개발 중 |
+| NaviHelper SDK | 내비 목적지 조회, 목적지 변경 감지, 경유지 조회·추가·삭제 | ✅ 구현 · 에뮬레이터 검증 (1단계) |
+| Media3 / MediaSession · AudioFocusRequest | 이야기 재생, 차량 미디어 센터·미디어 버튼 연동, 내비 안내·통화 시 양보 | 계획 (2단계) |
+| FusedLocation SDK | 현재 위치 기반 다음 이야기 선정, 방문 추정 | 계획 (3단계) |
+| TextToSpeech · SpeechToText SDK, Gleo Interface | 장소 안내 음성, "추가해줘" 음성 명령으로 경유지 등록 | 계획 (4단계) |
+| CarUxRestrictionsManager · Vehicle SDK | 주행 중 화면 제한, 주행·주차 상태 구분 | 계획 (2~5단계) |
+
+단계 구분은 기획서 「5. 개발 계획 ⑤ 단계별 개발 및 검증 계획」과 같습니다.
 
 ## 구현 현황
 
@@ -69,13 +76,22 @@ ROADFM은 목적지를 다시 입력받지 않습니다. 사용자가 현대차 
 | 콘텐츠 | 한국관광공사 TourAPI 기반 경로별 관광지 데이터 수집 |
 | 다음 단계 | Media3 재생과 오디오 포커스, 지역 이야기 API, 방문 기록 |
 
+### NaviHelper 연동 검증 (Pleos Connect 에뮬레이터 v2.1.0)
+
+| ① 내비 목적지 수신 | ② ROADFM이 등록한 경유지가 내비 경로에 반영 |
+|---|---|
+| ![내비 목적지 수신](docs/images/navi_destination.png) | ![내비 경유지 반영](docs/images/navi_waypoint.png) |
+| 현대차 내비에 입력한 목적지(강릉역 KTX)의 이름·주소·좌표·남은 거리를 `getDestinationInfo()`로 받아 표시합니다. 경유지는 최대 2개까지 등록됩니다. | `addWaypoint()` 요청 후 내비가 경로를 다시 탐색해 경유지를 안내합니다. 경유지 장소는 Pleos 가이드의 예시 좌표입니다. |
+
+위 화면은 SDK 연동을 확인하기 위한 개발용 화면입니다. 서비스 화면은 [UX 프로토타입](prototypes/prototype2/ROADFM_prototype_final.html)에서 볼 수 있습니다.
+
 ---
 
 ## 실행 방법
 
-### UX 프로토타입
+### 시연 (UX 프로토타입)
 
-`prototypes/prototype2/ROADFM_prototype_final.html`을 브라우저(Chrome, Edge)로 엽니다. 장면이 순서대로 자동 재생됩니다.
+`prototypes/prototype2/ROADFM_prototype_final.html`을 브라우저(Chrome, Edge)로 엽니다. 취향 선택부터 여정 기록까지 14개 장면이 자동 재생됩니다.
 
 | 조작 | 동작 |
 |---|---|
@@ -85,10 +101,21 @@ ROADFM은 목적지를 다시 입력받지 않습니다. 사용자가 현대차 
 
 ### 차량 앱
 
-[Pleos Connect 에뮬레이터](https://document.pleos.ai/docs/pleos-only/getting-started)에 APK를 설치합니다.
+#### 테스트 환경
+
+| 항목 | 내용 |
+|---|---|
+| 에뮬레이터 | Pleos Connect 에뮬레이터 **v2.1.0** (AVD `Pleos Connect v2.1.0`, Android 14 / API 34, x86_64) ([설정 가이드](https://document.pleos.ai/docs/connect/guide/getting-started/application-development/setup-connect-sdk-emulator)) |
+| 화면 규격 | 2560 × 1440, 160 dpi (에뮬레이터 기본 화면) |
+| APK | [`apk/앞으로의여정예쩡_ROADFM_release.apk`](<apk/앞으로의여정예쩡_ROADFM_release.apk>) (release 빌드, minSdk 29 / targetSdk 35) |
+| 권한 | `pleos.car.permission.NAVI_ROUTE`, `pleos.car.permission.NAVI_ROUTE_SEARCH` (매니페스트에 선언) |
+| 필요한 설정 | 별도 계정·API 키·백엔드 없이 실행됩니다. 에뮬레이터 기본 내비에서 목적지를 설정할 수 있으면 됩니다. |
+
+#### 설치와 확인
 
 ```
-adb install -r apk/roadfm-release.apk
+adb install -r "apk/앞으로의여정예쩡_ROADFM_release.apk"
+adb logcat -s RoadFmNavi    # 연동 로그 확인(선택)
 ```
 
 1. 에뮬레이터의 내비에서 목적지를 설정하고 길 안내를 시작합니다.
@@ -103,7 +130,7 @@ adb install -r apk/roadfm-release.apk
 | 영역 | 기술 |
 |---|---|
 | 차량 앱 | Kotlin, Jetpack Compose, Pleos Connect NaviHelper SDK 3.0.5 |
-| 재생 | AndroidX Media3 |
+| 재생 (계획) | AndroidX Media3 |
 | 백엔드 | Spring Boot 3.5, Java 21, PostgreSQL + PostGIS |
 | 데이터 | 한국관광공사 TourAPI |
 
